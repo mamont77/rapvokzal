@@ -1,0 +1,131 @@
+<?php
+// $Id: search_engine_referers.module,v 1.15 2010/09/20 22:45:32 soxofaan Exp $
+
+/**
+ * Implementation of hook_menu()
+ */
+function search_engine_referers_menu() {
+  $items = array();
+  $items['admin/reports/search_engine_referers'] = array(
+    'title' => 'Search engine referers',
+    'description' => 'Extract search queries from search engine referers in the access log.',
+    'page callback' => 'search_engine_referers_overview',
+    'access arguments' => array('view search engine referers'),
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_perm()
+ */
+function search_engine_referers_perm() {
+  return array('view search engine referers');
+}
+
+/**
+ * Callback function for overview page
+ */
+function search_engine_referers_overview() {
+  // check if access logging is enabled
+  if (!variable_get('statistics_enable_access_log', 0)) {
+    drupal_set_message(t('The access log is not enabled. The listing of search engine referers will be empty or outdated. <a href="!accesslog">Enable and configure the access log</a>.', array('!accesslog' => url('admin/reports/settings'))), 'warning');
+  }
+
+  $output = '';
+
+  // search engine patterns and properties
+  $engines = array(
+    'Google' => array(
+      'host_pattern_sql' => 'http://www.google.%',
+      'host_pattern_preg' => '!google(\\.[a-z]+)+$!',
+      'path_pattern' => '!^/(search|url)!',
+      'query_variable' => 'q',
+    ),
+    'Yahoo!' => array(
+      'host_pattern_sql' => 'http://%search.yahoo.com/%',
+      'host_pattern_preg' => '!([a-z]+\\.)*search\\.yahoo\\.com!',
+      'path_pattern' => '!^/search!',
+      'query_variable' => 'p',
+    ),
+    'Live search' => array(
+      'host_pattern_sql' => 'http://search.%.com/results.aspx%',
+      'host_pattern_preg' => '!search\\.(live|msn)\\.com!',
+      'path_pattern' => '!^/results.aspx!',
+      'query_variable' => 'q',
+    ),
+    'Bing' => array(
+      'host_pattern_sql' => 'http://%.bing.com/search%',
+      'host_pattern_preg' => '!bing\\.com!',
+      'path_pattern' => '!^/search!',
+      'query_variable' => 'q',
+    ),
+    'Yandex' => array(
+      'host_pattern_sql' => 'http://%yandex.ru/yandsearch%',
+      'host_pattern_preg' => '!yandex\\.ru!',
+      'path_pattern' => '!^/yandsearch!',
+      'query_variable' => 'text',
+    ),
+    'Rambler' => array(
+      'host_pattern_sql' => 'http://www.rambler.ru/srch%',
+      'host_pattern_preg' => '!rambler\\.ru!',
+      'path_pattern' => '!^/srch!',
+      'query_variable' => 'words',
+    ),
+  );
+  $num = intval(variable_get('search_engine_referers_db_limit', 10));
+
+  // build the table
+  $header = array(t('Date'), t('Page'), t('Search engine'), t('Query'));
+  $rows = array();
+
+  // iterate over the engines
+  foreach ($engines as $engine_name => $engine) {
+    $result = db_query_range("SELECT aid, timestamp, url, path FROM {accesslog} WHERE LOWER(url) LIKE LOWER('%s') ORDER BY timestamp DESC", $engine['host_pattern_sql'], 0, $num);
+    while ($r = db_fetch_object($result)) {
+      $url_data = parse_url($r->url);
+      if (preg_match($engine['host_pattern_preg'], $url_data['host']) && preg_match($engine['path_pattern'], $url_data['path'])) {
+        parse_str($url_data['query'], $query_data);
+        # Create link to referer page
+        $url = l($query_data[$engine['query_variable']], $r->url);
+        # Fix empty links, which can happen if query_variable isn't found or in
+        # case of non UTF encoding of the query.
+        if (substr($url, -5) == '></a>') {
+          $url = l(t('[n/a]'), $r->url);
+        }
+        # Page
+        $title = drupal_get_path_alias($r->path);
+        $title = truncate_utf8($title, 30, FALSE, TRUE);
+        # Build row.
+        $rows[$r->aid] = array(format_date($r->timestamp, 'small'), l($title, $r->path), $url_data['host'], $url);
+      }
+    }
+  }
+  // Sort rows by date (access id actually)
+  krsort($rows);
+
+  if (empty($rows)) {
+    $rows[] = array(array('data' => t('No search engine referers found.'), 'colspan' => 4));
+  }
+
+  // theme the table
+  $output .= theme('table', $header, $rows);
+
+  // add settings form
+  $output .= drupal_get_form('search_engine_referers_settings');
+
+  return $output;
+}
+
+/**
+ * Form generating function for search_engine_referers settings
+ */
+function search_engine_referers_settings() {
+  $form = array();
+  $form['search_engine_referers_db_limit'] = array(
+    '#type' => 'select',
+    '#title' => t('Maximum number of entries per search engine to display'),
+    '#options' => array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 30 => 30, 50 => 50),
+    '#default_value' => variable_get('search_engine_referers_db_limit', 10),
+  );
+  return system_settings_form($form);
+}

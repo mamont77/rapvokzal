@@ -1,0 +1,9 @@
+Changes May 5th 2011
+-----------------------------
+Removed surplus $void parameter from hook_menu
+
+Changes June 6th 2011
+-----------------------------
+Added form weight in settings
+
+

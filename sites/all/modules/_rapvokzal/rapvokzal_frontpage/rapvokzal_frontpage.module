@@ -1,0 +1,381 @@
+<?php
+
+function rapvokzal_frontpage_menu() {
+  $items = array();
+
+  $items['rapvokzal_frontpage'] = array(
+    'title' => '',
+    'page callback' => 'rapvokzal_frontpage_all',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK
+  );
+  $items['admin/build/rapvokzal_frontpage'] = array(
+    'title' => 'RAPvokzal FrontPage',
+    'description' => 'Configure Front Page',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rapvokzal_frontpage_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'rapvokzal_frontpage.admin.inc',
+  );
+
+  return $items;
+}
+
+function rapvokzal_frontpage_perm() {
+  return array('access content');
+}
+
+function rapvokzal_frontpage_init() {
+  //drupal_add_js(drupal_get_path('module', 'rapvokzal_frontpage') . '/rapvokzal_frontpage.js', 'module');
+  //drupal_add_css(drupal_get_path('module', 'rapvokzal_frontpage')  .'/rapvokzal_frontpage.css');
+}
+
+
+
+function rapvokzal_frontpage_all() {
+
+  $count_albums = variable_get('rapvokzal_frontpage_count_albums', 6);
+  $count_news = variable_get('rapvokzal_frontpage_count_news', 4);
+  $count_articles = variable_get('rapvokzal_frontpage_count_articles', 4);
+  $count_cinema = variable_get('rapvokzal_frontpage_count_cinema', 3);
+  $count_videos = variable_get('rapvokzal_frontpage_count_videos', 5);
+  $text_welcome = variable_get('rapvokzal_frontpage_welcome', '');
+  $enable_welcome = variable_get('rapvokzal_frontpage_welcome_enable', 0);
+
+  $welcome = '';
+  $albums = '';
+  $news = '';
+  $articles = '';
+  $partys = '';
+  $cinema = '';
+  $videos = '';
+
+  if (1 == $enable_welcome && !empty($text_welcome)) {
+    $welcome = '<div id="text_welcome">' . $text_welcome . '</div>';
+  }
+
+
+  /* ALBUMS */
+  $query = "
+SELECT node.title AS node_title,
+node.nid AS nid,
+node.type AS node_type,
+node.vid AS node_vid,
+node_data_field_album_year.field_album_year_value AS node_data_field_album_year_field_album_year_value,
+node_data_field_album_style.field_album_style_value AS node_data_field_album_style_field_album_style_value,
+node_data_field_album_kbt.field_album_kbt_value AS node_data_field_album_kbt_field_album_kbt_value,
+node_data_field_album_kbt.field_album_size_value AS node_data_field_album_kbt_field_album_size_value,
+node_counter.totalcount AS node_counter_totalcount,
+node_comment_statistics.comment_count AS node_comment_statistics_comment_count,
+node.sticky AS node_sticky,
+node.nid AS node_nid,
+caver.field_caver_data AS caver_data,
+files.filepath AS caver_filepath
+ FROM node node 
+ LEFT JOIN content_field_album_year node_data_field_album_year ON node.vid = node_data_field_album_year.vid
+ LEFT JOIN content_field_album_style node_data_field_album_style ON node.vid = node_data_field_album_style.vid
+ LEFT JOIN content_type_rap_albums node_data_field_album_kbt ON node.vid = node_data_field_album_kbt.vid
+ LEFT JOIN node_counter node_counter ON node.nid = node_counter.nid
+ LEFT JOIN content_field_caver AS caver ON node.nid = caver.nid
+ LEFT JOIN files files ON caver.field_caver_fid = files.fid 
+ INNER JOIN node_comment_statistics node_comment_statistics ON node.nid = node_comment_statistics.nid
+ WHERE (node.status <> 0) AND (node.promote <> 0) AND (node.type in ('rap_albums')) AND caver.delta = '0'
+   ORDER BY node_sticky DESC, node.created DESC
+   LIMIT 0, %d
+  ";
+  $i = 0;
+  $title = t('Albums');
+  $albums .= '<div id="new_albums" class="front_block">';
+  $albums .= '<div class="block_title"><h3>' . $title . '</h3><span class="more">' . l(t('All albums'), 'music', array('attributes' => array('title' => $title))) . '</span></div>';
+  $albums .= '<div class="content">';
+  $queryResult = db_query($query, $count_albums);
+  while ($item = db_fetch_object($queryResult)) {
+    //echo'<pre>';print_r($item);echo'</pre>';
+    $item->caver_data = unserialize($item->caver_data);
+    $item->caver_data['alt'] = check_plain($item->node_title . ' | ' . $item->caver_data['alt']);
+    $item->caver_data['title'] = check_plain($item->node_title . ' | ' . $item->caver_data['title']);
+    $item->node_title = l($item->node_title, 'node/' . $item->nid);
+    if (module_exists('imagecache')) {
+      $item->image = theme('imagecache', '125x125', $item->caver_filepath, $item->caver_data['alt'], $item->caver_data['title'], $attributes = NULL);
+    }
+
+    $odd_even = ($i % 2 == 0) ? ' odd' : ' even';
+    $i++;
+    $albums .= '<div class="front_block_item float ' . $odd_even . '">';
+    //$albums .= '  <div class="album_data">';
+    $albums .= '    <h2 class="title">' . $item->node_title . '</h2>';
+    $albums .= '    <div class="cover"><a href="' . url('node/' . $item->nid) . '">' . $item->image . '</a></div>';
+    $albums .= '    <div class="data_wrapper">';
+    $albums .= '      <span class="year">' . t('Year') . ': <b>' . substr(check_plain($item->node_data_field_album_year_field_album_year_value), 0, 4) . '</b></span>';
+    $albums .= '      <span class="style">' . t('Style') . ': <b>' . check_plain($item->node_data_field_album_style_field_album_style_value) . '</b></span>';
+    $albums .= '      <span class="view_count">' . t('Reads') . ': <b>' . $item->node_counter_totalcount . '</b></span>';
+    $albums .= '      <span class="comment_count">' . t('Comments') . ': <b>' . $item->node_comment_statistics_comment_count . '</b></span>';
+    $albums .= '    </div>';
+    //$albums .= '  </div>';
+    $albums .= '</div>';
+
+  }
+  $albums .= '</div>';
+  $albums .= '</div>';
+
+  /* NEWS and READ */
+  $query = "
+    SELECT node.nid AS nid,
+      node.title AS node_title,
+      node_data_field_news_img.field_news_img_fid AS fid,
+      node_data_field_news_img.field_news_img_data AS image_data,
+      node_revisions.teaser AS teaser,
+      files.filepath AS image_filepath
+    FROM node node 
+    LEFT JOIN content_field_news_img node_data_field_news_img ON node.vid = node_data_field_news_img.vid
+    LEFT JOIN node_revisions node_revisions ON node.vid = node_revisions.vid
+    LEFT JOIN files AS files ON node_data_field_news_img.field_news_img_fid = files.fid 
+    WHERE (node.status <> 0) AND (node.promote <> 0) AND (node.type in ('story')) AND node_data_field_news_img.delta = '0'
+    ORDER BY node.sticky DESC, node.created DESC
+    LIMIT 0, %d
+  ";
+
+  $i = 0;
+  $title = t('News');
+  $news .= '<div id="new_news" class="front_block">';
+  $news .= '<div class="block_title"><h3>' . $title . '</h3><span class="more">' . l(t('All news'), 'news', array('attributes' => array('title' => $title))) . '</span></div>';
+  $news .= '<div class="content">';
+  $queryResult = db_query($query, $count_news);
+  while ($item = db_fetch_object($queryResult)) {
+    if (!empty($item->image_data)) {
+      $item->image_data = unserialize($item->image_data);
+      $item->image_data['alt'] = check_plain($item->node_title . ' | ' . $item->image_data['alt']);
+      $item->image_data['title'] = check_plain($item->node_title . ' | ' . $item->image_data['title']);
+      if (module_exists('imagecache')) {
+        $item->image = theme('imagecache', '60x60', $item->image_filepath, $item->image_data['alt'], $item->image_data['title'], $attributes = NULL);
+      }
+    } else {
+      $item->image = '';
+    }
+    $item->node_title = l($item->node_title, 'node/' . $item->nid);
+    $odd_even = ($i % 2 == 0) ? ' odd' : ' even';
+    $i++;
+    $news .= '<div class="front_block_item ' . $odd_even . '">';
+    $news .= '  <h2 class="title">' . $item->node_title . '</h2>';
+    $news .= '  <div class="cover"><a href="' . url('node/' . $item->nid) . '">' . $item->image . '</a></div>';
+    $news .= '  <p class="teaser">' . truncate_utf8($item->teaser, 84, $wordsafe = TRUE, $dots = TRUE) . ' <span>' . l(t('Read more'), 'node/' . $item->nid, array('attributes' => array('class' => 'read-more' ))) . '</span></p>';
+    $news .= '</div>';
+  }
+  $news .= '</div>';
+  $news .= '</div>';
+
+  $query = "
+    SELECT node.nid AS nid,
+      node.title AS node_title,
+      node_data_field_news_img.field_news_img_fid AS fid,
+      node_data_field_news_img.field_news_img_data AS image_data,
+      node_revisions.teaser AS teaser,
+      files.filepath AS image_filepath
+    FROM node node 
+    LEFT JOIN content_field_news_img node_data_field_news_img ON node.vid = node_data_field_news_img.vid
+    LEFT JOIN node_revisions node_revisions ON node.vid = node_revisions.vid
+    LEFT JOIN files AS files ON node_data_field_news_img.field_news_img_fid = files.fid 
+    WHERE (node.status <> 0) AND (node.promote <> 0) AND (node.type in ('reading')) AND node_data_field_news_img.delta = '0'
+    ORDER BY node.sticky DESC, node.created DESC
+    LIMIT 0, %d
+  ";
+
+  $i = 0;
+  $title = t('Articles');
+  $articles .= '<div id="new_articles" class="front_block">';
+  $articles .= '<div class="block_title"><h3>' . $title . '</h3><span class="more">' . l(t('All articles'), 'reading', array('attributes' => array('title' => $title))) . '</span></div>';
+  $articles .= '<div class="content">';
+  $queryResult = db_query($query, $count_articles);
+  while ($item = db_fetch_object($queryResult)) {
+    if (!empty($item->image_data)) {
+      $item->image_data = unserialize($item->image_data);
+      $item->image_data['alt'] = check_plain($item->node_title . ' | ' . $item->image_data['alt']);
+      $item->image_data['title'] = check_plain($item->node_title . ' | ' . $item->image_data['title']);
+      if (module_exists('imagecache')) {
+        $item->image = theme('imagecache', '60x60', $item->image_filepath, $item->image_data['alt'], $item->image_data['title'], $attributes = NULL);
+      }
+    } else {
+        $item->image = theme('imagecache', '60x60', $item->image_filepath);
+    }
+    $item->node_title = l($item->node_title, 'node/' . $item->nid);
+    $odd_even = ($i % 2 == 0) ? ' odd' : ' even';
+    $i++;
+    $articles .= '<div class="front_block_item ' . $odd_even . '">';
+    $articles .= '  <h2 class="title">' . $item->node_title . '</h2>';
+    $articles .= '  <div class="cover"><a href="' . url('node/' . $item->nid) . '">' . $item->image . '</a></div>';
+    $articles .= '  <p class="teaser">' . truncate_utf8($item->teaser, 84, $wordsafe = TRUE, $dots = TRUE) . ' <span>' . l(t('Read more'), 'node/' . $item->nid, array('attributes' => array('class' => 'read-more' ))) . '</span></p>';
+    $articles .= '</div>';
+  }
+  $articles .= '</div>';
+  $articles .= '</div>';
+
+  /* PARTY */
+  $today = date('Y-m-d');
+  $query = "
+    SELECT node.nid AS nid,
+      node.title AS node_title,
+      node_data_field_party_time.field_party_img_data AS image_data,
+      node_data_field_party_time.field_city_value AS city,
+      node_data_field_party_time.field_club_value AS club,
+      node_data_field_party_time.field_party_time_value AS time,
+      node_counter.totalcount AS view_count,
+      node_comment_statistics.comment_count AS comment_count,
+      node_revisions.teaser AS teaser,
+      files.filepath AS image_filepath
+    FROM node node 
+    LEFT JOIN content_type_party node_data_field_party_time ON node.vid = node_data_field_party_time.vid
+    LEFT JOIN node_counter node_counter ON node.nid = node_counter.nid
+    INNER JOIN node_comment_statistics node_comment_statistics ON node.nid = node_comment_statistics.nid
+    LEFT JOIN node_revisions node_revisions ON node.vid = node_revisions.vid
+    INNER JOIN files AS files ON node_data_field_party_time.field_party_img_fid = files.fid
+    WHERE (DATE_FORMAT(STR_TO_DATE(node_data_field_party_time.field_party_time_value, '%Y-%m-%%dT%T'), '%Y-%m-%%d') >= '$today')
+    AND ((node.status <> 0) AND (node.type in ('party')))
+    ORDER BY node.sticky DESC, time ASC
+    LIMIT 0, 3
+  ";
+
+  $i = 0;
+  $title = t('Billboard');
+  $partys .= '<div id="new_party" class="front_block">';
+  $partys .= '<div class="block_title"><h3>' . $title . '</h3><span class="more">' . l(t('All Party'), 'party', array('attributes' => array('title' => $title))) . '</span></div>';
+  $partys .= '<div class="content">';
+  $queryResult = db_query($query, $today);
+
+  while ($item = db_fetch_object($queryResult)) {
+
+    $item->image_data = unserialize($item->image_data);
+    $item->image_data['alt'] = check_plain($item->node_title . ' | ' . $item->image_data['alt']);
+    $item->image_data['title'] = check_plain($item->node_title . ' | ' . $item->image_data['title']);
+    $item->node_title = l(truncate_utf8($item->node_title, 100, $wordsafe = FALSE, $dots = TRUE), 'node/' . $item->nid);
+    $item->city = check_plain($item->city);
+    $item->club = check_plain($item->club);
+    $item->time = substr(check_plain($item->time), 0, 10);
+    if (module_exists('imagecache')) {
+      $item->image = theme('imagecache', '125x150', $item->image_filepath, $item->image_data['alt'], $item->image_data['title'], $attributes = NULL);
+    }
+
+    $odd_even = ($i % 2 == 0) ? ' odd' : ' even';
+    $i++;
+    $partys .= '<div class="front_block_item ' . $odd_even . '">';
+    $partys .= '  <h2 class="title">' . $item->node_title . '</h2>';
+    $partys .= '  <div class="cover"><a href="' . url('node/' . $item->nid) . '">' . $item->image . '</a></div>';
+    $partys .= '  <div class="data_wrapper">';
+    $partys .= '    <span class="city">' . t('City') . ': <b>' . check_plain($item->city) . '</b></span>';
+    $partys .= '    <span class="club">' . t('Space') . ': <b>' . check_plain($item->club) . '</b></span>';
+    $partys .= '    <span class="time">' . t('Date') . ': <b>' . $item->time . '</b></span>';
+    $partys .= '    <span class="view_count">' . t('Reads') . ': <b>' . $item->view_count . '</b></span>';
+    $partys .= '    <span class="comment_count">' . t('Comments') . ': <b>' . $item->comment_count . '</b></span>';
+    $partys .= '  </div>';
+    $partys .= '  <p class="teaser">' . truncate_utf8($item->teaser, 350, $wordsafe = TRUE, $dots = TRUE) . ' <span>' . l(t('Read more'), 'node/' . $item->nid, array('attributes' => array('class' => 'read-more' ))) . '</span></p>';
+    $partys .= '</div>';
+  }
+
+  $partys .= '</div>';
+  $partys .= '</div>';
+  $partys = ($i > 0) ? $partys : '';
+
+  /* CINEMA */
+  $query = "
+    SELECT node.nid AS nid,
+      node.title AS node_title,
+      node_data_field_cinema_img.field_cinema_img_fid AS fid,
+      node_data_field_cinema_img.field_cinema_img_data AS image_data,
+      node_data_field_cinema_img.field_cinema_year_value AS year,
+      node_data_field_cinema_img.field_cinema_kachestvo_value AS kachestvo,
+      files.filepath AS image_filepath,
+      node_counter.totalcount AS view_count,
+      node_comment_statistics.comment_count AS comment_count
+    FROM node node 
+    LEFT JOIN content_type_cinema node_data_field_cinema_img ON node.vid = node_data_field_cinema_img.vid
+    LEFT JOIN node_counter node_counter ON node.nid = node_counter.nid
+    INNER JOIN files AS files ON node_data_field_cinema_img.field_cinema_img_fid = files.fid
+    INNER JOIN node_comment_statistics node_comment_statistics ON node.nid = node_comment_statistics.nid
+    WHERE (node.status <> 0) AND (node.promote <> 0) AND (node.type in ('cinema'))
+    ORDER BY node.sticky DESC, node.created DESC
+    LIMIT 0, %d
+  ";
+
+  $i = 0;
+  $title = t('Cinema');
+  $cinema .= '<div id="new_cinema" class="front_block">';
+  $cinema .= '<div class="block_title"><h3>' . $title . '</h3><span class="more">' . l(t('All cinema'), 'cinema', array('attributes' => array('title' => $title))) . '</span></div>';
+  $cinema .= '<div class="content">';
+  $queryResult = db_query($query, $count_cinema);
+
+  while ($item = db_fetch_object($queryResult)) {
+
+    $item->image_data = unserialize($item->image_data);
+    $item->image_data['alt'] = check_plain($item->node_title . ' | ' . $item->image_data['alt']);
+    $item->image_data['title'] = check_plain($item->node_title . ' | ' . $item->image_data['title']);
+    $item->node_title = l($item->node_title, 'node/' . $item->nid);
+    $item->year = substr(check_plain($item->year), 0, 4);
+    $item->kachestvo = check_plain($item->kachestvo);
+    if (module_exists('imagecache')) {
+      $item->image = theme('imagecache', '70x90', $item->image_filepath, $item->image_data['alt'], $item->image_data['title'], $attributes = NULL);
+    }
+
+    $odd_even = ($i % 2 == 0) ? ' odd' : ' even';
+    $i++;
+    $cinema .= '<div class="front_block_item float ' . $odd_even . '">';
+    $cinema .= '  <h2 class="title">' . $item->node_title . '</h2>';
+    $cinema .= '  <div class="cover"><a href="' . url('node/' . $item->nid) . '">' . $item->image . '</a></div>';
+    $cinema .= '  <div class="data_wrapper">';
+    $cinema .= '    <span class="year">' . t('Year') . ': <b>' . substr(check_plain($item->year), 0, 4) . '</b></span>';
+    $cinema .= '    <span class="quality">' . t('Quality') . ': <b>' . check_plain($item->kachestvo) . '</b></span>';
+    $cinema .= '    <span class="view_count">' . t('Reads') . ': <b>' . $item->view_count . '</b></span>';
+    $cinema .= '    <span class="comment_count">' . t('Comments') . ': <b>' . $item->comment_count . '</b></span>';
+    $cinema .= '  </div>';
+    $cinema .= '</div>';
+
+  }
+  $cinema .= '</div>';
+  $cinema .= '</div>';
+
+
+  /* VIDEO CLIPS */
+  $query = "
+SELECT node.title AS node_title,
+node.nid AS nid,
+node.vid AS node_vid,
+node.sticky AS node_sticky,
+node_data_field_album_year.field_album_year_value AS node_data_field_album_year_field_album_year_value,
+content_field_video_clip_code.field_video_clip_code_data AS field_video_clip_code_data,
+content_field_video_clip_code.delta AS delta,
+node.created AS node_created
+  FROM node node 
+  LEFT JOIN content_field_album_year node_data_field_album_year ON node.vid = node_data_field_album_year.vid
+  LEFT JOIN content_field_video_clip_code content_field_video_clip_code ON node.vid = content_field_video_clip_code.vid 
+  WHERE (node.type in ('video_clip')) AND (node.status <> 0) AND delta = 0
+   ORDER BY node_sticky DESC, node_created DESC
+   LIMIT 0, %d
+  ";
+  $i = 0;
+  $title = t('Video Clips OnLine');
+  $videos .= '<div id="video_clips" class="front_block">';
+  $videos .= '<div class="block_title"><h3>' . $title . '</h3><span class="more">' . l(t('All video'), 'videos', array('attributes' => array('title' => $title))) . '</span></div>';
+  $videos .= '<div class="content">';
+  $queryResult = db_query($query, $count_videos);
+  while ($item = db_fetch_object($queryResult)) {
+    $item->field_video_clip_code_data = unserialize($item->field_video_clip_code_data);
+    //echo'<pre>';print_r($count_videos);echo'</pre>';
+    $item->node_title = l($item->node_title, 'node/' . $item->nid);
+    if (module_exists('imagecache')) {
+      $item->image = theme('imagecache', 'image_110px50px', $item->field_video_clip_code_data['emthumb']['filepath']);
+    } else {
+      $item->image = '';
+    }
+
+    $odd_even = ($i % 2 == 0) ? ' odd' : ' even';
+    $i++;
+    $videos .= '<div class="front_block_item float ' . $odd_even . '">';
+    $videos .= '  <h2 class="title">' . $item->node_title . '</h2>';
+    $videos .= '  <div class="cover"><a href="' . url('node/' . $item->nid) . '">' . $item->image . '</a></div>';
+    $videos .= '</div>';
+
+  }
+  $videos .= '</div>';
+  $videos .= '</div>';
+
+  return $welcome . $partys . $albums . $videos . '<div id="news_and_articles">' . $news . $articles . '</div>' . $cinema;
+}
+

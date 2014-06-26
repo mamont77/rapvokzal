@@ -1,0 +1,162 @@
+<?php
+// $Id: ext_link_page.module,v 1.1.4.6 2010/12/24 14:39:11 zzolo Exp $
+
+/**
+ * @file
+ * The main module logic for ext_link_page module.
+ *
+ * This module provides an input filter that directs all
+ * External Links to the configured page to notify the user
+ * is leaving the site.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function ext_link_page_help($path, $arg) {
+  $output = '';
+  
+  switch ($path) {
+    case 'admin/help#ext_link_help':
+    case 'admin/settings/ext_link_page':
+      $output = '<p>' . t('This module provides an input filter that redirects all external links to the configured page to notify the user is leaving the site.  You will have to enable filters in the <a href="!url">Input Format configuration</a>.', array('!url' => url('admin/settings/filters'))) . '</p>';
+      break;
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_perm().
+ */
+function ext_link_page_perm() {
+  return array('administer ext_link_page', 'access redirect page');
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ext_link_page_theme() {
+  return array(
+    'ext_link_page' => array(
+      'template' => 'ext_link_page',
+      'arguments' => array(
+        'message' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function ext_link_page_menu() {
+  // Define default values
+  $defaults = _ext_link_page_get_defaults();
+  // Get variables
+  $path = check_plain(variable_get('ext_link_page_link_page', $defaults['ext_link_page_link_page']));
+
+  // Admin Page
+  $items['admin/settings/ext_link_page'] = array(
+    'title' => 'External link page',
+    'description' => 'Define the behavoir of External Link Page module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ext_link_page_admin_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer ext_link_page'),
+    'file' => 'includes/ext_link_page.admin.inc',
+  );
+  // External Link Page for redireting.  Since we are using variable
+  // output for the title and description, change callback.
+  $items[$path] = array(
+    'title callback' => 'check_plain',
+    'title' => variable_get('ext_link_page_page_title', $defaults['ext_link_page_page_title']),
+    'page callback' => '_ext_link_page_build_page',
+    'access callback' => 'user_access',
+    'access arguments' => array('access redirect page'),
+    'file' => 'includes/ext_link_page.page.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_filter().
+ */
+function ext_link_page_filter($op, $delta = 0, $format = -1, $text = '', $cache_id = 0) {
+  switch ($op) {
+    case 'list':
+      return array(0 => t('External links page'));
+
+    case 'description':
+      return t('Directs all External Links to the configured page to notify the user is leaving the site.');
+
+    case 'process':
+      // Find all href so we can test if the link is external or not
+      $text = preg_replace_callback('/href="([^">]+)"/', '_ext_link_page_replace', $text);
+      return $text;
+
+    default:
+      return $text;
+  }
+}
+
+/**
+ * Replace Logic
+ *
+ * @param $match
+ *   String that was matched
+ * @return
+ *   Page output
+ */
+function _ext_link_page_replace($match) {
+  // Get defaults
+  $defaults = _ext_link_page_get_defaults();
+  $url = $match[1];
+  $base_url = url(NULL, array('absolute' => TRUE));
+  $extra = '';
+
+  // If the link is external and valid and it's not an absolute link to the current site
+  if (valid_url($match[1], TRUE) && strpos($match[1], $base_url) === FALSE) {
+    $url = url(
+      variable_get('ext_link_page_link_page', $defaults['ext_link_page_link_page']),
+      array(
+        'query' => 'url=' . $match[1],
+      )
+    );
+
+    // Check if we want new window or nofollow
+    if (variable_get('ext_link_page_new_window', $defaults['ext_link_page_new_window'])) {
+      $extra .= ' target="_blank"';
+    }
+    if (variable_get('ext_link_page_nofollow', $defaults['ext_link_page_nofollow'])) {
+      $extra .= ' rel="nofollow"';
+    }
+  }
+
+  // Return output
+  return 'href="' . $url . '"' . $extra;
+}
+
+/**
+ * Get Default array
+ *
+ * @return
+ *   array of default values for easy lookup
+ */
+function _ext_link_page_get_defaults() {
+  $defaults = array();
+  $defaults = array(
+    'ext_link_page_direct_delay' => '5',
+    'ext_link_page_link_page' => 'ext_link',
+    'ext_link_page_page_title' => t('Leaving this site'),
+    'ext_link_page_page_message' => t('You are about to leave @site_name.  If you are not taken there in [delay] seconds, follow this link: @link.',
+      array(
+        '@site_name' => '[site_name]',
+        '@link' => '[link]',
+      )),
+    'ext_link_page_new_window' => FALSE,
+    'ext_link_page_nofollow' => FALSE,
+  );
+
+  return $defaults;
+}

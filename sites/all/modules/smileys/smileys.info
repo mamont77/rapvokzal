@@ -1,0 +1,10 @@
+name = Smileys
+description = "Replaces smileys inside posts with images."
+package = Smileys
+core = 6.x
+; Information added by drupal.org packaging script on 2012-11-14
+version = "6.x-1.1"
+core = "6.x"
+project = "smileys"
+datestamp = "1352923683"
+

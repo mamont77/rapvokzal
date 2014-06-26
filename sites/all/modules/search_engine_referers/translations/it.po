@@ -1,0 +1,71 @@
+# $Id: it.po,v 1.1 2009/01/28 22:19:18 soxofaan Exp $
+# Italian translation of Drupal (general)
+# Copyright 2009 Stefano Mallozzi <mail@stefanomallozzi.pro>
+# Generated from files:
+# search_engine_referers.module,v 1.6 2007/12/21 11:43:02 soxofaan
+# search_engine_referers.info,v 1.3 2007/12/21 11:43:02 soxofaan
+# search_engine_referers.install,v 1.2 2008/05/12 19:03:01 soxofaan
+#, fuzzy
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-01-17 18:28+0100\n"
+"PO-Revision-Date: 2009-01-17 18:28+0100\n"
+"Last-Translator: Stefano Mallozzi <mail@stefanomallozzi.pro>\n"
+"Language-Team: Italian <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+
+#: search_engine_referers.module:31
+msgid "The access log is not enabled. The listing of search engine referers will be empty or outdated. <a href=\"!accesslog\">Enable and configure the access log</a>."
+msgstr "Il log degli accessi non è attivato. L'elenco dei referrer dai motori di ricerca risulterà vuoto o non aggiornato. <a href=\"!accesslog\">Attiva e configura il log degli accessi</a>."
+
+#: search_engine_referers.module:60
+msgid "Date"
+msgstr "Data"
+
+#: search_engine_referers.module:60
+msgid "Search engine"
+msgstr "Motore di ricerca"
+
+#: search_engine_referers.module:60
+msgid "Query"
+msgstr "Ricerca"
+
+#: search_engine_referers.module:77
+msgid "No search engine referers found."
+msgstr "Non sono stati trovati referrer dai motori di ricerca."
+
+#: search_engine_referers.module:96
+msgid "Maximum number of entries per search engine to display"
+msgstr "Numero massimo di elementi da visualizzare per ciascun motore di ricerca"
+
+#: search_engine_referers.module:22
+msgid "view search engine referers"
+msgstr "mostra i referrer dai motori di ricerca"
+
+#: search_engine_referers.module:10
+msgid "Search engine referers"
+msgstr "Referrer dai motori di ricerca"
+
+#: search_engine_referers.module:11
+#: search_engine_referers.info:0
+msgid "Extract search queries from search engine referers in the access log."
+msgstr "Estrae le chiavi dai referrer dei motori di ricerca presenti nel log degli accessi."
+
+#: search_engine_referers.module:0
+msgid "search_engine_referers"
+msgstr "search_engine_referers"
+
+#: search_engine_referers.info:0
+msgid "Search Engine Referers"
+msgstr "Referrer dai motori di ricerca"
+
+#: search_engine_referers.install:8
+msgid "You can find the <a href=\"!url\">search engine referers page</a> in the reports section."
+msgstr "Puoi trovare la <a href=\"!url\">pagina dei referrer dai motori di ricerca</a> nella sezione dei rapporti."

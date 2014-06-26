@@ -1,0 +1,13 @@
+; $Id: rapvokzal_frontpage.info,v 0.1 2008/12/22 23:22:37 mamont Exp $
+name = RAP Vokzal front page
+description = RAP Vokzal front page (mainpage)
+package = RAP Vokzal
+core=6.x
+dependencies[] = content
+
+; Information added by drupal.org packaging script on 2008-12-18
+version = "6.x-0.1"
+core = "6.x"
+;project = "customerror"
+;datestamp = "1229619025"
+

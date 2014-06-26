@@ -1,0 +1,5 @@
+; $Id: cms_to_drupal.info,v 0.1 2008/12/22 23:22:37 mamont Exp $
+name = All CMS to DRUPAL
+description = Automatic Import all CMS and others Site Scripts to Drupal DB
+package = Mamont Utils
+core=6.x

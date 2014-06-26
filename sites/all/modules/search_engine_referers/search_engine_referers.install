@@ -1,0 +1,19 @@
+<?php
+// $Id: search_engine_referers.install,v 1.2 2008/05/12 19:03:01 soxofaan Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function search_engine_referers_install() {
+  drupal_set_message(t('You can find the <a href="!url">search engine referers page</a> in the reports section.',
+    array('!url' => url('admin/reports/search_engine_referers'))
+  ));
+}
+
+/**
+ * Implementation of hook_unstall().
+ */
+function search_engine_referers_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'search_engine_referers_%'");
+  cache_clear_all('variables', 'cache');
+}

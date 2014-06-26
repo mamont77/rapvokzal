@@ -1,0 +1,50 @@
+name        = RapVokzal v2010
+description = Zen sub-theme.
+
+screenshot = screenshot.png
+
+core       = 6.x
+base theme = zen
+
+stylesheets[all][]   = css/html-reset.css
+stylesheets[all][]   = css/wireframes.css
+stylesheets[all][]   = css/block-editing.css
+stylesheets[all][]   = css/panels-styles.css
+stylesheets[all][]   = css/jquery.bt.css
+stylesheets[all][]   = css/rapvokzal.css
+stylesheets[print][] = css/print.css
+; stylesheets[handheld][] = css/mobile.css
+; stylesheets[only screen and (max-device-width: 480px)][] = css/iphone.css
+
+conditional-stylesheets[if IE][all][]       = css/ie.css
+conditional-stylesheets[if lte IE 6][all][] = css/ie6.css
+
+scripts[] = js/css_browser_selector.js
+scripts[] = js/jquery-corner.js
+; scripts[] = js/jquery.bt.min.js
+scripts[] = js/global.js
+
+regions[highlight]      = Highlighted content
+regions[sidebar_second] = Second sidebar
+regions[content_top]    = Content top
+regions[content_bottom] = Content bottom
+
+; regions[footer]         = Footer
+regions[page_closure]   = Page closure
+
+features[] = logo
+features[] = node_user_picture
+features[] = comment_user_picture
+features[] = search
+features[] = favicon
+features[] = primary_links
+features[] = secondary_links
+
+settings[zen_block_editing]        = 1
+settings[zen_breadcrumb]           = yes
+settings[zen_breadcrumb_separator] = ' › '
+settings[zen_breadcrumb_home]      = 1
+settings[zen_breadcrumb_trailing]  = 1
+settings[zen_breadcrumb_title]     = 0
+settings[zen_rebuild_registry]     = 1
+settings[zen_wireframes]           = 0

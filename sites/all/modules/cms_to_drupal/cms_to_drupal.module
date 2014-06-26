@@ -1,0 +1,436 @@
+<?php
+//echo'<pre>';print_r();echo'</pre>';
+/**
+ * Implementation of hook_menu().
+ */
+function cms_to_drupal_menu() {
+  $items = array();
+
+  $items['admin/settings/import_other_db'] = array(
+    'title' => 'Import in Process',
+    'page callback' => 'import_other_db_global',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+/*
+function cms_to_drupal_perm() {
+  return array('administer site configuration');
+}*/
+
+function import_other_db_global() {
+
+  $output = '';
+  import_ibf_init();
+
+  if(0 == variable_get('import_ibf_user_done', 0)) {
+    $output .= import_ibf_user();
+  }
+
+  if(1 == variable_get('import_ibf_user_done', 0) && 0 == variable_get('import_ibf_topics_done', 0)) {
+    $output .= import_ibf_posts();
+  }
+
+  if(1 == variable_get('import_ibf_user_done', 0) && 1 == variable_get('import_ibf_topics_done', 0) && 0 == variable_get('import_ibf_coments_done', 0)) {
+    $output .= import_ibf_coments();
+  }
+
+
+  return $output;
+}
+
+/* IPB */
+
+function import_ibf_init() {
+  $ret = array();
+
+  /*USERS*/
+  if (db_table_exists('ibf_members') && '1' != variable_get('import_ibf_user_done', 0) && 0 == (variable_get('import_ibf_user_process', 0))) {
+    // Create the ibf_members.uid column.
+    db_add_field($ret, 'ibf_members', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+    $user_last_id = db_result(db_query("SELECT id FROM {ibf_members} ORDER BY id DESC LIMIT 1"));
+    variable_set('import_ibf_user_last_id', $user_last_id);
+    variable_set('import_ibf_user_process', 1);
+
+  /*temp for rapvokzal*/
+    $import_result = db_query("SELECT * FROM {users} WHERE access = '0'");
+    while ($import_user = db_fetch_object($import_result)) {
+      db_query("UPDATE {users} SET access = '%d' WHERE uid = %d", $import_user->created, $import_user->uid);
+    }
+  /*/temp*/
+
+  }
+
+  /*TOPICS*/
+  if (db_table_exists('ibf_topics') && '1' != variable_get('import_ibf_topics_done', 0) && 0 == (variable_get('import_ibf_topics_process', 0))) {
+    // Create the ibf_topics.nid column.
+    db_add_field($ret, 'ibf_topics', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+    $topics_last_id = db_result(db_query("SELECT tid FROM {ibf_topics} ORDER BY tid DESC LIMIT 1"));
+    variable_set('import_ibf_topics_last_id', $topics_last_id);
+    variable_set('import_ibf_topics_process', 1);
+  }
+
+  /*COMMENTS*/
+  if (db_table_exists('ibf_posts') && '1' != variable_get('import_ibf_comments_done', 0) && 0 == (variable_get('import_ibf_comments_process', 0))) {
+    // Create the ibf_posts.d_pid column.
+    db_add_field($ret, 'ibf_posts', 'd_pid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+    $comments_last_id = db_result(db_query("SELECT pid FROM {ibf_posts} WHERE new_topic = 0 ORDER BY pid DESC LIMIT 1"));
+    variable_set('import_ibf_comments_last_id', $comments_last_id);
+    variable_set('import_ibf_comments_process', 1);
+  }
+
+  return $ret;
+}
+
+function import_ibf_user() {
+
+  $output = '<h4>Users Process...</h4>';
+  if ('1' == variable_get('import_ibf_user_done', 0)) {
+    $output .= '<div>NOTISE! Users import Done!</div>';
+    return $output;
+  }
+
+  $current_id = variable_get('import_ibf_user_process', 0);
+  $user_last_id = variable_get('import_ibf_user_last_id', 0);
+  if($current_id >= $user_last_id) {
+    variable_set('import_ibf_user_done', 1);
+    $output .= '<div>Users import Done!</div>';
+    return $output;
+  }
+
+  $i=0;
+  $import_result = db_query("SELECT * FROM {ibf_members} LEFT JOIN {ibf_members_converge} ON id = converge_id WHERE id >= '%d' AND uid = 0 ORDER BY converge_joined ASC LIMIT 300", $current_id);
+  while ($import_user = db_fetch_object($import_result)) {
+    if($import_user->id == 1) $import_user->converge_email = $import_user->email; // admin fix
+    $drupal_result = db_query("SELECT * FROM {users} WHERE mail = '%s' OR mail = '%s' OR init = '%s' OR init = '%s'", $import_user->email, $import_user->converge_email, $import_user->email, $import_user->converge_email);
+    if ($user = db_fetch_object($drupal_result)) {
+      $user = drupal_unpack($user);
+      db_query("UPDATE {ibf_members} SET uid = '%d' WHERE id = %d", $user->uid, $import_user->id);
+    } else {
+      $drupal_result = db_query("SELECT * FROM {users} WHERE name = '%s'", $import_user->name);
+      if ($user = db_fetch_object($drupal_result)) {
+        $user = drupal_unpack($user);
+        db_query("UPDATE {ibf_members} SET uid = '%d' WHERE id = %d", $user->uid, $import_user->id);
+      } else {
+
+        $registration_info = array (
+          'name'    => $import_user->name,
+          'pass'    => $import_user->member_login_key,
+          'mail'    => $import_user->email,
+          'init'    => $import_user->converge_email,
+          'status'  => 1,
+          'created' => $import_user->converge_joined,
+          'access'  => $import_user->last_activity,
+          'login'   => $import_user->last_visit,
+          'roles'   => array(DRUPAL_AUTHENTICATED_RID),
+        );
+
+        $user = user_save('', $registration_info);
+        db_query("UPDATE {ibf_members} SET uid = '%d' WHERE id = %d", $user->uid, $import_user->id);
+        $i++;
+      }
+    }
+    variable_set('import_ibf_user_process', $import_user->id+1);
+  }
+  drupal_set_html_head('<meta http-equiv="refresh" content="1">');
+  $count = db_result(db_query("SELECT COUNT(*) FROM {ibf_members} WHERE uid != 0"));
+  $output .= 'Find (done) old users: ' . $count . '<br />';
+  $output .= 'Add new users: ' . $i . '<br />';
+
+  return $output;
+}
+
+function import_ibf_posts() {
+// aninim id = 9173 в реаале и 9168 на тестовом
+// $starter_name = 'test9809';//заменить на 9173 в реале на 'guestfromoldforum'
+
+  $output = '<h4>Topics Process...</h4>';
+  if ('1' == variable_get('import_ibf_topics_done', 0)) {
+    $output .= '<div>NOTISE! Topics import Done!</div>';
+    return $output;
+  }
+
+  $current_id = variable_get('import_ibf_topics_process', 0);
+  $topics_last_id = variable_get('import_ibf_topics_last_id', 0);
+  if($current_id >= $topics_last_id) {
+    variable_set('import_ibf_topics_done', 1);
+    $output .= '<div>Topics import Done!</div>';
+    return $output;
+  }
+
+  $i=0;
+  $forum_vid = 10;
+  $tax_arr = _import_ibf_posts_get_taxonomy_matrix();
+
+  $import_result = db_query("SELECT t.tid, m.uid, t.forum_id, t.start_date, t.title, t.description, p.post, t.starter_name, t.state, t.views
+     FROM {ibf_topics} AS t
+     LEFT JOIN {ibf_posts} AS p ON t.tid = p.topic_id 
+     LEFT JOIN {ibf_members} AS m ON t.starter_id = m.id 
+     WHERE t.tid >= '%d' AND p.new_topic = 1 
+     ORDER BY t.tid ASC 
+     LIMIT 200", $current_id);
+  while ($import_topics = db_fetch_object($import_result)) {
+
+    $forum_id = isset($tax_arr[$import_topics->forum_id]) ? $tax_arr[$import_topics->forum_id] : 120;
+
+    // Populate the "authored by" field.
+    if ($account = user_load(array('uid' => $import_topics->uid))) {
+      $starter_name = $account->name;
+    }
+    else {
+      // Populate the "authored by" field.
+      if ($account = user_load(array('name' => $import_topics->starter_name))) {
+        $starter_name = $account->name;
+      }
+      else {
+        $starter_name = 'guestfromoldforum';//заменить на 9173 в реале на 'Гость из из старого форума'
+      }
+    }
+
+    $body = ($import_topics->description) ? $import_topics->description . '<br />' . $import_topics->post : $import_topics->post;
+    $body = str_replace("<#EMO_DIR#>", '', $body);
+    $body = str_replace("<br /><br />", '<br />', $body);
+    $body = str_replace("<br /><br />", '<br />', $body);
+    $body = filter_xss($body, array('a', 'b', 'i', 'u', 'br', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'span', 'div', 'p'));
+
+    $edit = array (
+      'uid' => empty($import_topics->uid) ? '9173' : $import_topics->uid,
+      'created' => $import_topics->start_date,
+      'type' => 'forum',
+      'language' => 'ru',
+      'changed' => $import_topics->start_date,
+      'title' => ('' == $import_topics->title) ? $import_topics->description : $import_topics->title,
+      'teaser_include' => 1,
+      'body' => $body,
+      'format' => 1,//Filtered HTML
+      'revision' => 0,
+      'name' => $starter_name,
+      'date' => format_date($import_topics->start_date, 'custom', 'Y-m-d H:i:s O'),//format 2009-07-25 15:55:09
+      'status' => 1,
+      'promote' => 0,
+      'sticky' => 0,
+      'comment' => ($import_topics->state == 'closed') ? 1 : 2,
+      'pathauto_perform_alias' => 1,
+      'taxonomy' => array($forum_vid => $forum_id),
+      'xmlsitemap' => array(
+        'priority_override' => 0.6,
+        'lastmod' => time(),
+        'changefreq' => 0,
+        'changecount' => 0,
+        ),
+  );
+
+    $node = node_submit($edit);
+    node_save($node);
+    db_query("UPDATE {ibf_topics} SET nid = '%d' WHERE tid = %d", $node->nid, $import_topics->tid);
+    $i++;
+    variable_set('import_ibf_topics_process', $import_topics->tid+1);
+
+  }
+
+  drupal_set_html_head('<meta http-equiv="refresh" content="1">');
+  $output .= 'Add new posts: ' . $i . '<br />';
+
+  return $output;
+}
+
+function _import_ibf_posts_get_taxonomy_matrix() {
+// forum vid = 10
+
+  $matrix_drupal = array(
+    //'tid' => 'name',
+    '113' => 'Юмор',
+    '109' => 'Хоккей',
+    '108' => 'Футбол',
+    '117' => 'Телевидение, Радио, СМИ',
+    '103' => 'Стены, Экстрим, Спорт, Танцы',
+    '98' => 'Создание Треков',
+    '121' => 'Реклама новых RAP сайтов',
+    '119' => 'Работа сайта',
+    '120' => 'Психушка (Дурдом)',// все что некуда постать, и не в игнорематрикс - посылаем сюда
+    '114' => 'Проблемы Молодежи',
+    '112' => 'Политика',
+    '94' => 'Поздравления!!!',
+    '96' => 'Отечественный рэп',
+    '118' => 'Объявления',
+    '93' => 'Новости',
+    '101' => 'Не RAPой едим мы',
+    '100' => 'МП3 Флэйва',
+    '116' => 'Мода и Стиль',
+    '97' => 'Лирика / Проза / Фристайлы',
+    '111' => 'Курилка',
+    '102' => 'Конкурсы',
+    '110' => 'Зал Отдыха (Разное)',
+    '99' => 'Демо-Музыка (mp3)',
+    '105' => 'Граффити',
+    '115' => 'Встречи в Реале',
+    '92' => 'Вокзальные Биты',
+    '104' => 'БрейкДанс',
+    '107' => 'Баскетбол',
+    '95' => 'Rap/MCing (зарубежный)',
+    '106' => 'Cпорт',
+    '590' => '1-й Официальный MC-Баттл Rapvokzal.com',
+  );
+
+  $matrix_ibf = array( //ibf_forums
+    //'id' => 'name',
+    '46' => '1-й Официальный MC-Баттл Rapvokzal.com',
+    '45' => 'Юмор',
+    '29' => 'Хоккей',
+    '27' => 'Футбол',
+    '12' => 'Телевидение, Радио, СМИ',
+    '21' => 'Стены, Экстрим, Спорт, Танцы',
+    '5' => 'Создание Треков',
+    '15' => 'Работа сайта',
+    '16' => 'Психушка (Дурдом)',
+    '9' => 'Проблемы Молодежи',
+    '42' => 'Политика',
+    '13' => 'Поздравления&#33;&#33;&#33;',
+    '24' => 'Отечественный рэп',
+    '14' => 'Объявления',
+    '31' => 'Новости',
+    '37' => 'Не RAPой едим мы',
+    '30' => 'МП3 Флэйва',
+    '11' => 'Мода и Стиль',
+    '4' => 'Лирика / Проза / Фристайлы',
+    '8' => 'Курилка',
+    '38' => 'Конкурсы',
+    '7' => 'Зал Отдыха (Разное)',
+    '6' => 'Демо-Музыка (mp3)',
+    '20' => 'Граффити',
+    '10' => 'Встречи в Реале',
+    '1' => 'Вокзальные Биты',
+    '22' => 'БрейкДанс',
+    '28' => 'Баскетбол',
+    '3' => 'Rap/MCing (зарубежный)',
+    '23' => 'Cпорт',
+  );
+
+  $matrix_ibf_ignore = array( //ibf_forums
+    //'id' => 'name',
+    '47' => 'Для тех кто Судья',
+  );
+
+  $matrix_ibf_to_drupal = array( //ibf_forums
+    //'id' => 'tid',
+    '46' => '590',
+    '45' => '113',
+    '29' => '109',
+    '27' => '108',
+    '12' => '117',
+    '21' => '103',
+    '5' => '98',
+    '15' => '119',
+    '16' => '120',
+    '9' => '114',
+    '42' => '112',
+    '13' => '94',
+    '24' => '96',
+    '14' => '118',
+    '31' => '93',
+    '37' => '101',
+    '30' => '100',
+    '11' => '116',
+    '4' => '97',
+    '8' => '111',
+    '38' => '102',
+    '7' => '110',
+    '6' => '99',
+    '20' => '105',
+    '10' => '115',
+    '1' => '92',
+    '22' => '104',
+    '28' => '107',
+    '3' => '95',
+    '23' => '106',
+  );
+
+  return $matrix_ibf_to_drupal;
+}
+
+
+function import_ibf_coments() {
+
+  $output = '<h4>Comments Process...</h4>';
+  if ('1' == variable_get('import_ibf_comments_done', 0)) {
+    $output .= '<div>NOTISE! Comments import Done!</div>';
+    return $output;
+  }
+
+  $current_id = variable_get('import_ibf_comments_process', 0);
+  $comments_last_id = variable_get('import_ibf_comments_last_id', 0);
+  if($current_id >= $comments_last_id) {
+    variable_set('import_ibf_comments_done', 1);
+    $output .= '<div>Comments import Done!</div>';
+    return $output;
+  }
+
+  $i=0;
+  $tax_arr = _import_ibf_posts_get_taxonomy_matrix();
+
+  $import_result = db_query("SELECT p.pid, p.author_id, m.uid, p.author_name, p.ip_address, p.post_date, p.edit_time, p.post, p.topic_id, p.post_parent, t.nid, p.d_pid
+    FROM {ibf_posts} AS p
+    LEFT JOIN {ibf_topics} AS t ON p.topic_id = t.tid
+    LEFT JOIN {ibf_members} AS m ON p.author_id = m.id
+    WHERE p.new_topic = 0 AND p.pid >= '%d' 
+    ORDER BY p.pid ASC 
+    LIMIT 250", $current_id);
+  while ($import_comments = db_fetch_object($import_result)) {
+
+    if($import_comments->author_id == 0) {
+      if ($account = user_load(array('name' => $import_comments->author_name))) {
+        $import_comments->uid = $account->uid;
+        $import_comments->author_name = $account->name;
+      } else {
+        $import_comments->uid = 0;
+        $import_comments->author_name = $import_comments->author_name;
+      }
+    }
+
+    $import_comments->post = str_replace("<#EMO_DIR#>", '', $import_comments->post);
+    $import_comments->post = str_replace("<br /><br />", '<br />', $import_comments->post);
+    $import_comments->post = str_replace("<br /><br />", '<br />', $import_comments->post);
+    $import_comments->post = filter_xss($import_comments->post, array('b', 'i', 'u', 'br', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'span', 'div', 'p'));
+
+    $subject = truncate_utf8(trim(decode_entities(strip_tags(check_markup($import_comments->post, 1)))), 29, TRUE);
+    if ($subject == '') {
+      $subject = t('(No subject)');
+    }
+
+    if('' != trim($import_comments->post)) {
+      $edit = array (
+        'author' => $import_comments->author_name,
+        'subject' => $subject,
+        'comment' => $import_comments->post,
+        'format' => 1,
+        'cid' => '',
+        'pid' => (0 != $import_comments->d_pid) ? $import_comments->d_pid : 0,
+        'nid' => $import_comments->nid,
+        'uid' => ('' != $import_comments->uid) ? $import_comments->uid : '',// для анонимуса пусто, но вместо этого name
+        'date' => $import_comments->post_date,
+        'timestamp' => $import_comments->post_date,
+        'name' => $import_comments->author_name, // для анононимуса то что введет, для зарегиного родное
+      );
+      $cid = comment_save($edit);
+      db_query("UPDATE {ibf_posts} SET d_pid = '%d' WHERE post_parent = '%d' AND new_topic = 0", $cid, $import_comments->pid);
+    }
+
+    $i++;
+    variable_set('import_ibf_comments_process', $import_comments->pid+1);
+  }
+
+  drupal_set_html_head('<meta http-equiv="refresh" content="1">');
+  $output .= 'Add new comments: ' . $i . '<br />';
+  $output .= 'Current cid: ' . $cid . '<br />';
+  $output .= 'Comments last id from old forum : ' . $comments_last_id . '<br />';
+  $output .= 'Current id from old forum : ' .  $current_id . '<br />';
+
+  return $output;
+}
+

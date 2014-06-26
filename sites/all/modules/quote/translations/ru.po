@@ -1,0 +1,239 @@
+# Russian translation of quote (all releases)
+# Copyright (c) 2008 by the Russian translation team
+# Generated from files:
+#  quote.info,v 1.2.2.2 2007/06/30 14:54:38 karthik
+#  quote.module,v 1.29.2.8 2007/08/11 19:51:20 karthik
+#  quote.module,v 1.29.2.10.2.4 2008/05/14 15:04:04 karthik
+#  quote.info,v 1.2.2.2.2.1 2008/03/28 22:59:59 karthik
+#  quote.module,v 1.29.2.13 2008/05/14 15:04:17 karthik
+#  quote.admin.inc,v 1.1.2.2 2008/05/13 06:20:53 karthik
+#  quote.install,v 1.1.2.1 2007/08/11 09:34:53 karthik
+#  quote.install,v 1.1.2.1.2.1 2008/03/30 06:15:10 karthik
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: quote (all releases)\n"
+"POT-Creation-Date: 2008-09-02 18:12+0400\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+
+#: quote.info:0,0,0; quote.module:28,44,17,28,51
+msgid "Quote"
+msgstr "Цитировать"
+
+#: quote.module:0,50,56,0,63,0
+msgid "quote"
+msgstr "цитировать"
+
+#: quote.module:51,45,52
+msgid "Quote this post in your reply."
+msgstr ""
+"Цитировать это сообщение в вашем "
+"ответе."
+
+#: quote.module:123,118,125
+msgid "Quote filter"
+msgstr "Фильтр цитат"
+
+#: quote.module:125,120,127
+msgid ""
+"Converts [quote] tags into &lt;div&gt; tags. Must apply after HTML "
+"filters."
+msgstr ""
+"Преобразует тэги [quote] в тэги &lt;div&gt; "
+"Должен применяться после HTML фильтров."
+
+#: quote.module:138,133,140
+msgid ""
+"\n"
+"      <p>Quoted content can be placed between [quote] tags in order to "
+"be displayed as an indented quote. Every [quote] tag <em>must</em> "
+"have a corresponding [/quote] tag. For example:\n"
+"      <pre>[quote]This is a simple quote.[/quote]</pre> is displayed "
+"as:</p>\n"
+"      <div class=\"quote-msg\"><div "
+"class=\"quote-author\">Quote:</div>This is a simple quote.</div>\n"
+"      <p>Additionally, there is an optional attribute which allows "
+"quotes to specify the original author.\n"
+"      <pre>[quote=Mr. Drupal]This is a quote with an attribution "
+"line.[/quote]\n"
+"      </pre> is displayed as:</p>\n"
+"      <div class=\"quote-msg\"><div class=\"quote-author\">Mr. Drupal "
+"wrote:</div>This is a quote with an attribution line.</div>\n"
+"      <p>Finally, multiple [quote] tags can be nested within one "
+"another. Just remember that every [quote] tag <strong>must</strong> "
+"have a corresponding [/quote] tag.\n"
+"      <pre>\n"
+"      [quote]I think she says it best...\n"
+"      [quote=Ms. Quotation]This is a quote nested within another "
+"quote.[/quote]\n"
+"      but you can't argue with\n"
+"      [quote=Ms. Reply]The more quotes, the merrier.\n"
+"      Just don't get too carried away.[/quote]\n"
+"      And I have nothing more to say.[/quote]</pre> is displayed "
+"as:</p>\n"
+"      <div class=\"quote-msg\"><div "
+"class=\"quote-author\">Quote:</div>I think she says it best...\n"
+"      <div class=\"quote-msg\"><div class=\"quote-author\">Ms. "
+"Quotation wrote:</div>This is a quote nested within another "
+"quote.</div>\n"
+"      but you can't argue with\n"
+"      <div class=\"quote-msg\"><div class=\"quote-author\">Ms. Reply "
+"wrote:</div>The more quotes, the merrier. Just don't get too carried "
+"away.</div>\n"
+"      And I have nothing more to say.</div>\n"
+"    "
+msgstr ""
+"<p>Цитируемый материал должен быть "
+"помещен между тегами [quote] для "
+"отображения в виде цитаты с отступом. "
+"Каждый тэг [quote] <em>должен</em> иметь "
+"парный тэг [/quote]. Например:\n"
+"      <pre>[quote]Это простая цитата.[/quote]</pre> "
+"которая отображается так:</p>\n"
+"      <div class=\"quote-msg\"><div "
+"class=\"quote-author\">Цитата:</div>Это простая "
+"цитата.</div>\n"
+"      <p>Существует дополнительный "
+"атрибут, который позволяет указать в "
+"цитате автора исходного текста.\n"
+"      <pre>[quote=г-н Друпал]Цитата с "
+"указанием авторства.[/quote]\n"
+"      </pre> которая отображается так:</p>\n"
+"      <div class=\"quote-msg\"><div class=\"quote-author\">г-н "
+"Друпал пишет:</div>Цитата с указанием "
+"авторства.</div>\n"
+"      <p>И наконец, множественные тэги "
+"[quote] могут быть вложены друг в друга . "
+"Только не забывайте, что каждый тэг "
+"[quote] <strong>должен</strong> иметь парный тэг "
+"[/quote].\n"
+"      <pre>\n"
+"      [quote]Я думаю, она лучшая...\n"
+"      [quote=г-жа Цитирование]Это цитата, "
+"вложенная в другую цитату.[/quote]\n"
+"      сложно спорить с тем, что\n"
+"      [quote=г-н Ответ]Еще цитаты.\n"
+"      Нельзя объять необъятное.[/quote]\n"
+"      Мне больше нечего сказать.[/quote]</pre> "
+"отображается так:</p>\n"
+"      <div class=\"quote-msg\"><div "
+"class=\"quote-author\">Цитата:</div>Я думаю, она "
+"лучшая...\n"
+"      <div class=\"quote-msg\"><div class=\"quote-author\">г-жа "
+"Цитирование пишет:</div>Это цитата, "
+"вложенная в другую цитату.</div>\n"
+"      сложно спорить с тем, что\n"
+"      <div class=\"quote-msg\"><div class=\"quote-author\">г-н "
+"Ответ пишет:</div>Еще цитаты. Нельзя "
+"объять необъятное.</div>\n"
+"       Мне больше нечего сказать.</div>"
+
+#: quote.module:162,157,164
+msgid "You may quote other posts using [quote] tags."
+msgstr ""
+"Вы можете цитировать другие "
+"сообщения, используя теги [quote]."
+
+#: quote.module:177,179; quote.admin.inc:36
+msgid "Node associations"
+msgstr "Связанный материал"
+
+#: quote.module:178,180; quote.admin.inc:37
+msgid "Select the node types to associate with the quote filter."
+msgstr ""
+"Укажите типы материалов, связанные с "
+"фильтром цитат."
+
+#: quote.module:184,186; quote.admin.inc:43
+msgid "Display the quote link for nodes"
+msgstr ""
+"Отображать ссылку на цитирование для "
+"материала."
+
+#: quote.module:185,187; quote.admin.inc:44
+msgid ""
+"Leave this option disabled if you use a PHP or similar filter in your "
+"nodes. The quote link is always displayed for comments."
+msgstr ""
+"Не включайте эту опцию, если вы "
+"используете PHP или подобные фильтры в "
+"вашем материале. Ссылка на "
+"цитирование всегда отображается для "
+"комментариев."
+
+#: quote.module:190,192; quote.admin.inc:49
+msgid "Make the comment subject field a required field"
+msgstr ""
+"Установить поле заголовка "
+"комментария обязательным полем"
+
+#: quote.module:191,193; quote.admin.inc:50
+msgid ""
+"Making the comment subject field a required field will ensure that "
+"unsightly [quote] tags are not displayed."
+msgstr ""
+"Устанавливая заголовок поля "
+"комментария обязательным полем, мы "
+"будем уверены, что неприглядные тэги "
+"[quote] не будут отображаться."
+
+#: quote.module:247,201,249
+msgid "Quote:"
+msgstr "Цитата:"
+
+#: quote.module:249,203,251
+msgid "%name wrote:"
+msgstr "%name пишет:"
+
+#: quote.info:0,0,0
+msgid "Allows users to quote posts or comments."
+msgstr ""
+"Разрешает пользователям цитировать "
+"сообщения или комментарии."
+
+#: quote.module:10,10; quote.admin.inc:15
+msgid ""
+"<p>The quote filter allows users to quote other posts in their\n"
+"comments. Besides the following settings, the quote filter will need "
+"to be\n"
+"enabled for each <a href=\"!input-format\">input format</a> (as "
+"required). Please\n"
+"make sure that the quote filter is arranged <em>after</em> any HTML "
+"filters and\n"
+"<em>before</em> the line break filter. For more information, please "
+"visit the\n"
+"<a href=\"!project-page\">project page</a>.</p>"
+msgstr ""
+"<p>Фильтр цитат позволяет "
+"пользователям цитировать другие "
+"сообщения в их комментариях. Помимо "
+"следующих параметров , фильтр цитаты "
+"должен будет быть\\n"
+"разрешен для каждого <a "
+"href=\\\"!input-format\\\">формата ввода</a> (как "
+"обязательный). Пожалуйста,\\n"
+" удостоверьтесь, что фильтр цитаты "
+"расположен <em>после</em> любых фильтров "
+"HTML и \\n"
+"<em>перед</em> фильтром разрыва линии. За "
+"дополнительной информацией, "
+"пожалуйста, посетите \\n"
+"<a href=\\\"!project-page\\\">страницу проекта</a>.</p>"
+
+#: quote.install:10,10,10
+msgid "The quote module has been installed successfully."
+msgstr ""
+
+#: quote.module:18,29
+msgid "Configure the behaviour of the quote module."
+msgstr ""
+
+#: quote.install:40
+msgid "The quote module has been uninstalled successfully."
+msgstr ""
+

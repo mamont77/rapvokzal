@@ -1,0 +1,245 @@
+/* $Id$ */
+
+/*
++----------------------------------------------------------------+
+|   Feverultra for Dupal 6.x - Version 1.0                       |
+|   Copyright (C) 2010 Antsin.com All Rights Reserved.           |
+|   @license - Copyrighted Commercial Software                   |
+|----------------------------------------------------------------|
+|   Theme Name: Feverultra                                       |
+|   Description: Feverultra by Antsin                            |
+|   Author: Antsin.com                                           |
+|   Date: 2nd August 2010                                        |
+|   Website: http://www.antsin.com/                              |
+|----------------------------------------------------------------+
+|   This file may not be redistributed in whole or               |
+|   significant part.                                            |
++----------------------------------------------------------------+
+*/
+
+/*** FORUM LINK LISTS ********************************************************/
+.forum-links li {
+  list-style-image: none;
+  list-style-type: none;
+  background: none;
+}
+
+.forum-links li a {
+  font-weight: bold;
+}
+
+/*** FORUM & TOPIC LIST ******************************************************/
+/* Headers */
+.node-type-forum h1.title, .section-forum h1.title {
+  padding: 10px 20px;
+}
+
+#forum .forum-table tbody,
+#forum .forum-topics tbody {
+  border-top: none;
+  background-color: transparent !important;
+}
+
+#forum tr {
+  border-bottom: none;
+  padding: 0.1em 0.6em;
+}
+
+#forum td {
+  background-image: none;
+}
+
+#forum .forum-folder-legend dl {
+  margin: 0 20px;
+}
+
+/* Containers & Forums */
+#forum tr.container {
+  height: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+#forum tr.container .name a {
+  padding: 0 10px;
+}
+
+#forum tr.next-container td {
+  padding: 0;
+  margin: 0;
+  height: 10px;
+}
+
+#forum .forum-details .description {
+  color: #898989;
+}
+
+#forum .container .forum-details .description {
+  font-weight: normal;
+  color: #5F67A5;
+}
+
+/* Topic listings */
+#forum td .links {
+  font-size: 0.9em;
+}
+
+/*** FORUM STATISTICS ********************************************************/
+.forum-statistics {
+  padding: 10px 0;
+  margin: 0 20px;
+}
+
+#forum-statistics-header {
+  height: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-left: 10px;
+}
+
+.forum-statistics-sub-header {
+  font-weight: bold;
+}
+
+/*** FORUM THREADS ***********************************************************/
+/* Header at the top of each post */
+.post-title {
+  font-weight: bold;
+}
+
+.post-num a:link,
+.post-num a:visited,
+.post-num a:active,
+.post-num a:hover {
+  color: #ffffff;
+}
+
+/* Wrap around author pane and comment */
+.forum-post-wrapper {
+  position: relative;  
+}
+
+/* Author information pane */
+/* Note: more CSS in the author pane css file */
+.forum-post-panel-sub  .author-pane .author-name {
+  position: absolute;
+  font-weight: bold;
+  text-transform: uppercase;
+  top: -1px;
+  left: 0px;
+  padding: 8px 20px 12px 10px;
+}
+
+.author-pane-name-status .picture {
+  text-align: center;
+}
+
+.author-pane-section {
+  margin-bottom: 0 !important;
+}
+
+.author-pane .author-pane-label, .author-pane-line .author-pane-label{
+  font-weight: bold;
+}
+
+.author-pane-line-extra {
+  margin: 0 18px 20px 18px;
+}
+
+.author-pane-line ul, .author-pane-line-extra ul {
+  margin: 0;
+  padding: 0;
+}
+
+.author-pane-line ul li, .author-pane-line-extra ul li {
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 7px 0 7px 20px;
+  border-bottom: 1px solid #C0C0C0;
+  background: transparent url("images/list_square.png") no-repeat left 10px;
+}
+
+.author-pane-line-extra ul li.first {
+  padding: 2px 0 7px 20px;
+}
+
+.author-joined {
+  background: transparent url("images/icon_join_date.png") no-repeat left 4px !important;
+}
+
+.author-posts {
+  background: transparent url("images/icon_post.png") no-repeat left 5px !important;
+}
+
+.author-post-date {
+  background: transparent url("images/icon_post_date.png") no-repeat left 4px !important;
+}
+
+.author-post-date.first {
+  background: transparent url("images/icon_post_date.png") no-repeat left top !important;
+}
+
+.author-post-num {
+  background: transparent url("images/icon_post_num.png") no-repeat left 4px !important;
+}
+
+.author-post-num.first {
+  background: transparent url("images/icon_post_num.png") no-repeat left top !important;
+}
+
+.author-points {
+  background: transparent url("images/icon_point.png") no-repeat left 4px !important;
+}
+
+.author-status {
+  background: transparent url("images/icon_status.png") no-repeat left 4px !important;
+}
+
+/* Post text area */
+.forum-post-panel-main .makeup-up {
+  position: absolute;
+  top: -1px;
+  left: 1px;
+  width: 10px;
+  height: 1px;
+}
+
+.forum-post-panel-main .makeup-down {
+  position: absolute;
+  bottom: -1px;
+  left: 1px;
+  width: 10px;
+  height: 1px;
+}
+
+.forum-topic-navigation {
+  border-top: none;
+  border-bottom: none;
+}
+
+/* Signature */
+.author-signature {
+  font-size: .8em;
+}
+
+/** reply **/
+.section-comment .forum-post-panel-sub {
+  display: none;
+}
+
+.section-comment .forum-post-panel-main {
+  margin-left: 0;
+  background-image: none;
+}
+
+.section-comment .post-info {
+  border: none;
+  background-color: transparent;
+}
+
+.section-comment .posted-on {
+  font-size: 11px;
+  font-weight: normal;
+}

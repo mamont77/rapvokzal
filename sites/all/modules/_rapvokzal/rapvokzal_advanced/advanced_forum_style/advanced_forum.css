@@ -1,0 +1,262 @@
+/* $Id: advanced_forum.css,v 1.1.2.18 2009/03/05 04:47:01 michellec Exp $ */
+
+/*
+This file contains colors, graphics, and text effects. For structural markup,
+see advanced_forum-structure.css.
+
+Colors used:
+  #ffffff Text on headers
+  #0062A0 Pager number
+  #91CDF5 Borders & headers
+  #BDE0F5 Container background, sticky topic
+  #5F67A5 Container description
+  #898989 Forum description
+  #EDF5FA Author pane background
+
+Images used:
+  images/pager-bg.png Pager background gradient.
+*/
+
+/*** FORUM LINK LISTS ********************************************************/
+
+.forum-links li {
+  list-style-image: none;
+  list-style-type: none;
+  background: none;
+}
+
+.forum-links li a {
+    /*background: url("images/bg-more-small.png") repeat-x scroll left top transparent;*/
+    color: #959595;
+    line-height: 8px;
+    margin-bottom: 0;
+    /*padding: 3px 10px;*/
+    /*text-align: center;*/
+    white-space: nowrap;
+}
+
+.comment ul.links.forum-links {
+    margin-left: 0;
+}
+
+ul.links.forum-links li {
+    border-right: 1px solid #CCCCCC;
+    padding: 0 0.4em 0 0.2em;
+}
+
+/*** PAGER *******************************************************************/
+
+#forum .pager a:link,
+#forum .pager a:visited,
+#forum-comments .pager a:link,
+#forum-comments .pager a:visited {
+/*  text-decoration: none;
+  border: 1px solid #91CDF5;
+  background: #ffffff url(images/pager-bg.png) repeat-x left top;
+  font-weight: bold;*/
+}
+
+#forum .pager-current,
+#forum .pager a:hover,
+#forum-comments .pager-current,
+#forum-comments .pager a:hover {
+/*  color: #0062A0; */
+}
+
+#forum .pager a.active,
+#forum-comments .pager a.active {
+ /* background: #fff url(images/pager-bg.png) repeat-x left top;
+  color: #0062A0; */
+}
+
+/*** FORUM & TOPIC LIST ******************************************************/
+
+/* General */
+#forum .forum-table,
+#forum .forum-topics {
+  border: 1px solid #91CDF5;
+}
+
+#forum .forum-table {
+    border-collapse: separate;
+}
+
+/* Headers */
+#forum .forum-table th,
+#forum .forum-topics th,
+#forum .forum-topics th a,
+#forum .forum-topics th a:link,
+#forum .forum-topics th a:hover,
+#forum .forum-topics th a:visited {
+    background-color: #B0E2FF;
+    border-bottom: 3px solid #8FD6FF;
+    color: #0174B7;
+    font-weight: bold;
+    padding: 5px;
+}
+
+#forum .forum-table tbody,
+#forum .forum-topics tbody {
+  border-top: none;
+}
+
+/* Containers & Forums */
+#forum td.container {
+  background-color: #fae193;
+  border-bottom: none;
+}
+
+#forum td.container a {
+color:#616161;
+}
+
+#forum .forum-details .name,
+#forum .forum-details .description
+{
+    padding-left: 5px;
+}
+
+
+#forum .forum-details .description {
+/*  font-size: 85%;
+  color: #898989;*/
+}
+
+#forum .container .forum-details .description {
+  font-weight: normal;
+  color: #5F67A5;
+}
+
+/* Topic listings */
+
+#forum td .links {
+  font-size: 0.9em;
+}
+
+#forum tr.sticky-topic {
+  background-color: #BDE0F5;
+}
+
+/*** FORUM STATISTICS ********************************************************/
+
+#forum-statistics {
+  border: 1px solid #91CDF5;
+}
+
+#forum-statistics-header {
+  background-color: #8FD6FF;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.forum-statistics-sub-header {
+  background-color: #BDE0F5;
+  font-weight: bold;
+}
+
+/*** FORUM THREADS ***********************************************************/
+
+.forum-post {
+  border: 2px solid #91CDF5;
+}
+
+/* Header at the top of each post */
+.post-info {
+  background: #91CDF5 ;
+  color: #ffffff;
+  border-bottom: 1px solid #91CDF5;
+}
+
+.posted-on {
+  font-size: .8em;
+  font-weight: bold;
+}
+
+.forum-post .new {
+  color: #ffffff;
+}
+
+.post-title {
+  font-weight: bold;
+  border-bottom: 1px solid #91CDF5;
+}
+
+.post-num a:link,
+.post-num a:visited,
+.post-num a:active,
+.post-num a:hover {
+  color: #ffffff;
+}
+
+/* Wrap around author pane and comment */
+.forum-post-wrapper {
+  background-color: #edf5fa;
+}
+
+/* Author information pane */
+/* Note: more CSS in the author pane css file */
+.forum-post-panel-sub  .author-pane .author-name {
+  font-size: 120%;
+  font-weight: bold;
+}
+
+.forum-post-panel-sub  .author-pane  .picture img {
+	border: 1px solid #91CDF5;
+	background: #ffffff;
+}
+
+.author-pane .author-joined {
+    background: url("images/icon_join_date.png") no-repeat scroll left top transparent;
+    padding-left: 20px;
+}
+
+/* Post text area */
+.forum-post-panel-main {
+  background-color: #fff;
+  border-left: 1px solid #91CDF5;
+}
+
+/* Signature */
+.author-signature {
+  font-size: .8em;
+}
+
+/* Post footer */
+.forum-post-footer {
+  background-color: #fff;
+  border-top: 1px solid #91CDF5;
+}
+
+.forum-post-links {
+  background-color: #fff;
+  border-left: 1px solid #91CDF5;
+}
+
+.author-contact {
+    background: url("/sites/all/modules/author_pane/images/contact.png") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 20px;
+    padding-left: 26px;
+    width: 200px;
+}
+
+.author-pane-line {
+    padding-bottom: 5px;
+}
+
+#forum .forum-details a {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#forum tr.even {
+    background-color: #faf2da;
+}
+
+#forum tr.odd {
+    background-color: #f6f6f6;
+}
+
+.comment .author-pane-name-status .picture {
+    float: none;
+}

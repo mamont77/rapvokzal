@@ -1,0 +1,126 @@
+/* Rapvokzal v1 */
+
+#login-region {
+float:right;
+position:relative;
+top:-29px;
+}
+
+#banner-region table,
+.cse-resultsContainer table
+{
+border-collapse:separate;
+}
+
+.cse-resultsContainer .gsc-branding {
+display: none;
+}
+
+.node .picture {
+float: right;
+margin:0 0 0 5px;
+}
+
+.node .taxonomy
+{
+float:right;
+}
+
+.view-latest-album table td,
+.view-video-clip table td
+{
+border:1px solid #333333;
+padding:0;
+vertical-align:top;
+}
+
+.view-latest-album table td div.views-field-title,
+.view-video-clip table td div.views-field-title
+{
+background-color:#3C78A7;
+height:25px;
+overflow:hidden;
+padding:5px;
+}
+
+.view-actual-party table td div.views-field-title a,
+.view-latest-album table td div.views-field-title a,
+.view-video-clip table td div.views-field-title a
+{
+color:#FFFFFF;
+}
+
+label.views-label-field-city-value, label.views-label-field-club-value, label.views-label-field-party-time-value, label.views-label-field-album-year-value, label.views-label-field-album-style-value, label.views-label-field-album-kbt-value, label.views-label-field-album-size-value, .views-field-comment-count span, .views-field-title a {
+font-weight:bold;
+}
+
+.view-latest-album.view-id-latest_album.view-display-id-page_1 .views-field-field-caver-fid {
+height:200px;
+width:200px;
+}
+
+table th a, table td a {
+text-decoration:underline;
+}
+
+.views-field-totalcount, .views-field-field-city-value, .views-field-field-club-value, .views-field-field-party-time-value, .views-field-field-album-year-value, .views-field-field-album-style-value, .views-field-field-album-kbt-value, .views-field-field-album-size-value, .views-field-comment-count {
+padding-left:5px;
+}
+
+label.views-label-field-city-value, label.views-label-field-club-value, label.views-label-field-party-time-value, label.views-label-field-album-year-value, label.views-label-field-album-style-value, label.views-label-field-album-kbt-value, label.views-label-field-album-size-value, .views-field-comment-count span, .views-field-title a {
+font-weight:bold;
+}
+
+.views-field-field-album-style-value, .views-field-field-album-kbt-value {
+height:15px;
+overflow:hidden;
+}
+
+.view-actual-party-v2 table {
+background-color:#FFFFFF;
+border:medium none;
+height:115px;
+width:680px;
+}
+
+.views-view-grid tbody {
+border-top:medium none;
+}
+
+.view-actual-party-v2 table td {
+border:1px solid #FF9900;
+height:115px;
+padding:0;
+vertical-align:top;
+/*width:680px;*/
+}
+
+.view-actual-party-v2 .views-field-title {
+background-color:#FF9900;
+height:15px;
+overflow:hidden;
+padding:2px;
+/*width:680px;*/
+}
+
+.view-actual-party-v2 .views-field-title a {
+color:#FFFFFF;
+}
+
+table th a, table td a {
+text-decoration:underline;
+}
+
+.view-actual-party-v2 .views-field-field-party-img-fid {
+border:1px solid #FF9900;
+float:left;
+height:100px;
+margin-right:5px;
+width:100px;
+}
+
+.view-actual-party-v2 .views-field-teaser {
+height:100px;
+margin-left:260px;
+margin-top:-84px;
+}

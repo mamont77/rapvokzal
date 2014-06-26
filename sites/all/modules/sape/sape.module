@@ -1,0 +1,164 @@
+<?php
+
+
+
+
+
+
+function  sape_admin_form() {
+	$form = array();
+
+	$form['sape_id'] = array(
+		'#type'    => 'textfield',
+		'#title'   => t('Sape ID '),
+		'#default_value' => variable_get('sape_id', '00000000000000000000000000'),
+		'#required'  => TRUE,
+		'#weight'    => -1
+	 );
+
+	$form['sape_gip'] = array(
+		'#type'    => 'checkbox',
+		'#title'   => t('Enable hypercontext'),
+		'#default_value' => variable_get('sape_gip', 1),
+		'#required'  => FALSE,
+		'#weight'    => 0
+	);
+
+	$form['sape_blocks'] = array(
+		'#type'    => 'textfield',
+		'#title'   => t('Count blocks'),
+		'#default_value' => variable_get('sape_blocks', 3),
+		'#required'  => TRUE,
+		'#weight'    => 0
+	);
+
+	$form['sape_path'] = array(
+		'#type'    => 'textfield',
+		'#title'   => t('Path to sape.php'),
+		'#default_value' => variable_get('sape_path', drupal_get_path('module', 'sape') . '/sape.php'),
+		'#required'  => TRUE,
+		'#weight'    => 0
+	);
+
+	$form['sape_enable'] = array(
+		'#type'    => 'checkbox',
+		'#title'   => t('Enable sape'),
+		'#default_value' => variable_get('sape_enable', 0),
+		'#required'  => FALSE,
+		'#weight'    => -2
+	);
+
+	return system_settings_form($form);
+}
+
+
+
+
+
+function sape_block($op = 'list', $delta = 0, $edit = array()) {
+	global $user;
+	global $sape;
+
+	if (variable_get('sape_enable', 0) == 1) {
+		switch ($op) {
+			case 'list' :
+				$blocks  = array();
+
+				$c = variable_get('sape_blocks', 3);
+
+				for ($i=0; $i < $c; $i++){
+					$blocks[$i]['info'] = sprintf("%s: %s", t('Advesting'), $i);
+					$blocks[$i]['cache'] = BLOCK_NO_CACHE;
+				}
+				return $blocks;
+			break;
+			case 'configure' :
+				$form['items'] = array(
+					'#type' => 'textfield',
+					'#title' => t('Count links in block'),
+					'#size' => 60,
+					'#default_value' => variable_get('sape_n'.$delta,  3),
+				);
+				return $form;
+			break;
+			case 'save' :
+				variable_set('sape_n'.$delta,  $edit['items']);
+			break;
+			case 'view' :
+				$c = variable_get('sape_blocks', 3);
+//				if ($delta < $c) {
+					$block  = array();
+					$output = '';
+
+					$block['subject'] = $block['subject'] ? $block['subject'] : t('Advesting');
+			  
+					$content = $sape->return_links(variable_get('sape_n'.$delta, 3));
+					$block['content'] =   $content;
+
+					return $block;
+//				}
+
+			break;
+		}
+	}
+}
+
+
+
+
+
+
+function sape_menu() {
+	$items = array();
+
+	$items['admin/settings/sape'] = array(
+		'title' => t('Sape configuration'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('sape_admin_form'),
+		'access arguments' => array('access administration pages'),
+		'type' => MENU_NORMAL_ITEM,
+		'weight' => 0,
+	);
+
+	return $items;
+}
+
+
+
+
+
+
+function sape_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+	global $sape_context, $sape;
+
+	if (($op == 'view') && (variable_get('sape_gip', 0) == 1) && (defined('_SAPE_USER')) && (variable_get('sape_enable',0) == 1)){
+		$node->content['body'] = array( '#value' => $sape_context->replace_in_text_segment($node->content['body']['#value']), '#weight' => 0 );
+	}
+}
+
+
+
+
+
+
+function sape_init() {
+	global $sape_context, $sape;
+
+	if ((variable_get('sape_enable',0) == 1) && is_file(variable_get('sape_path',''))) {
+		if (!defined('_SAPE_USER')){
+			define('_SAPE_USER', variable_get('sape_id', '000'));
+		}
+
+		require_once(variable_get('sape_path',''));
+		$o['charset'] = 'UTF-8';
+#$o['debug'] = true;
+#$o['verbose'] = true;
+		$sape_context = new SAPE_context($o);
+		$o['fetch_remote_type'] = 'socket';
+                $o['multi_site'] = true;
+                $sape = new SAPE_client($o);
+		unset($o);
+	}
+}
+
+?>

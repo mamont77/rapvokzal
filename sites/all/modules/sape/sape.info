@@ -1,0 +1,10 @@
+﻿; $Id: vacancy.info,v 1.4 2007/01/03 21:39:00 eaton Exp $
+name = SAPE
+description = Модуль, который позволяет вам разместить код Sape у себя на сайте. Работает в мультисайтинговой связке, выделяя для каждого сайта или поддомена свою базу. Переделан http://makartsoft.ru/
+core = 6.x
+
+; Information added by drupal.org packaging script on 2007-10-10
+version = "6.x-2.0"
+core = "6.x"
+project = "sape"
+datestamp = "1200812138"

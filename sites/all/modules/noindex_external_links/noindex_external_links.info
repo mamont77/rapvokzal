@@ -1,0 +1,13 @@
+name = Noindex External Links
+description = "Take control of indexing external links on your site."
+core = "6.x"
+project = "noindex_external_links"
+package = SEO Tools
+
+
+; Information added by drupal.org packaging script on 2013-02-17
+version = "6.x-1.3"
+core = "6.x"
+project = "noindex_external_links"
+datestamp = "1361084339"
+

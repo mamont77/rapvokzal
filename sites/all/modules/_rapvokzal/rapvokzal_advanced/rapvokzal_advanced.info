@@ -1,0 +1,10 @@
+; $Id: rapvokzal_advanced.info,v 0.1 2011/03/06 10:44:37 mamont Exp $
+name = RAP Vokzal advanced
+description = RAP Vokzal advanced func
+package = RAP Vokzal
+core=6.x
+
+; Information added by drupal.org packaging script on 2008-12-18
+version = "6.x-0.1"
+core = "6.x"
+

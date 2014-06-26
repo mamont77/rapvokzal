@@ -1,0 +1,11 @@
+; $Id: ext_link_page.info,v 1.1.4.2 2010/05/13 17:28:12 zzolo Exp $
+name = External Link Page
+description = "Provides a filter that redirects any external links will go to a page that states the user is leaving the site before going to external site."
+core = 6.x
+package = Filters
+; Information added by drupal.org packaging script on 2010-12-24
+version = "6.x-1.3"
+core = "6.x"
+project = "ext_link_page"
+datestamp = "1293203467"
+

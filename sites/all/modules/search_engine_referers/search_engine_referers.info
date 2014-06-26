@@ -1,0 +1,12 @@
+; $Id: search_engine_referers.info,v 1.4 2008/05/12 19:03:00 soxofaan Exp $
+name = "Search Engine Referers"
+description = "Extract the search queries from search engine referers in the access log."
+dependencies[] = statistics
+core = 6.x
+
+; Information added by drupal.org packaging script on 2010-09-20
+version = "6.x-1.2"
+core = "6.x"
+project = "search_engine_referers"
+datestamp = "1285023095"
+

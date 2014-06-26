@@ -1,0 +1,9 @@
+<?php
+
+function rapvokzal_advanced_advforum_styles() {
+  $items = array();
+  $items['RapVokzal'] = array(
+    'directory' => 'advanced_forum_style',
+  );
+  return $items;
+}
