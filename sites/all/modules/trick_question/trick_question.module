@@ -4,7 +4,7 @@
  * trick_question.module - Main file for trick question module
  * 
  * Developed by Martin Joergensen, martin@vertikal.dk, Headnet.dk/Vertikal.dk Jan 2010
- * Version 6.x-1.2
+ * Version 6.0-1
  *
  */
 
@@ -134,13 +134,6 @@ function trick_question_admin_form() {
     '#default_value' => variable_get('trick_question_form_ids', ''),
     );
 
-  // Form field weight
-  $form['trick_question_weight'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Form weight'),
-    '#description' => t('Enter the weight you want the trick question field to have in your forms. 50 will usually place it near the bottom of the form, -10 usually in the top.'),
-    '#default_value' => variable_get('trick_question_weight', 50),
-    );
 
   // Buttons
   $form['buttons']['save']=array(
@@ -169,7 +162,6 @@ function trick_question_admin_form_submit($form, &$form_state) {
   variable_set('trick_question_explanation', $form_state['values']['explanation']);
   variable_set('trick_question_forms', $form_state['values']['forms']);
   variable_set('trick_question_form_ids', $form_state['values']['form_ids']);
-  variable_set('trick_question_weight', $form_state['values']['trick_question_weight']);
   drupal_set_message(t('Your settings have been saved'));
 }
 
@@ -224,8 +216,8 @@ function trick_question_form_alter(&$form, &$form_state, $form_id) {
       '#type' => 'textfield',
       '#title' => variable_get('trick_question_question', t('Error in the Trick Question setup. Contact the admin.')),
       '#size' => 20,
-      '#description' => $explanation,
-      '#weight' => variable_get('trick_question_weight', 50),
+      '#description' =>  filter_xss_admin($explanation),
+      '#weight' => variable_get('trick_question_weight', 0),
     );
 
     // Add the validation handler

@@ -15,5 +15,4 @@ function trick_question_uninstall() {
   variable_del('trick_question_explanation');
   variable_del('trick_question_forms');
   variable_del('trick_question_form_ids');
-  variable_del('trick_question_weight');
 }

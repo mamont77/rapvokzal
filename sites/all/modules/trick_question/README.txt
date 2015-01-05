@@ -1,5 +1,5 @@
-Trick Question version 6.x-1.2 for Drupal 6.0
-------------------------------------------
+Trick Question version 1.0 for Drupal 6.0
+-----------------------------------------
 
 A very small and simple CAPTCHA-type spam prevention module to use as an
 alternative to larger and much more complex and facility rich modules such as
@@ -71,11 +71,6 @@ You can select any node form as well as the user registration form and the
 comment submission form. Should you have a form that doesn't appear in the
 list, simply add the Drupal form ID in the text field below the checkboxes.
 Save the settings and your question should appear on the relevant forms.
-
-Form weight
-You can decide where in your forms you want the Trick Question field
-to appear by entering a form weight. The default is 50.
-50 will usually place it near the bottom of the form, -10 usually in the top.
 
 Permissions
 Admin is never asked to fill out the Trick Question, so if you want to test

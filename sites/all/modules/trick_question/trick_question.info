@@ -2,11 +2,11 @@
 name = Trick Question
 description = Super simple Captcha-function for forms
 core = 6.x
-version = "6.x-1.2"
+version = "6.x-1.5"
 
-; Information added by drupal.org packaging script on 2011-06-06
-version = "6.x-1.2"
+; Information added by Drupal.org packaging script on 2014-11-11
+version = "6.x-1.5"
 core = "6.x"
 project = "trick_question"
-datestamp = "1307398319"
+datestamp = "1415708882"
 
