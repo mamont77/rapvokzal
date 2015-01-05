@@ -1,90 +1,56 @@
-$Id: README.txt,v 1.7.2.3 2008/12/17 18:10:36 kbahey Exp $
+CUSTOM ERROR README.txt
+=======================
 
-Copyright 2005 http://2bits.com
-
-Description
------------
 This module allows the site admin to create custom error pages for
-404 (not found), and 403 (access denied).
+HTTP status codes 403 (access denied) and 404 (not found), without the
+need to create nodes for each of them.
 
-Since the error pages are not real nodes, they do not belong a category
-term, and hence will not show up in node listings.
+Main features:
 
-It also allows the site admin to setup redirects for 404s. For example
-if you had a page called foo and a page called xyz, then you moved them
-to a page called bar, and abc respectively, you can setup a redirect pair
-of:
-
-  ^foo$ bar
-  ^xyz$ abc
-
-Users trying to access example.com/foo will be transparently redirected
-to example.com/bar.
-
-Features
---------
 * Configurable page title and descriptions.
+* There are no author and date/time headers as with normal nodes.
 * Any HTML formatted text can be be put in the page body.
-* Handles 404 and 403 errors at present. Drupal only allows those two
-  errors to be assigned custom pages. The design of this module is 
-  flexible though and can accommodate future codes easily.
-* The pages are themeable using the phptemplate_customerror() function
-  in the template.php. The first argument is the error code (currently
-  403 or 404), and the message content.
-* The messages can contain PHP, using one of two methods:
-  - By using the phptemplate_customerror() function (see above).
-  - By using the PHP checkbox in the settings.
+* The error pages are themeable.
 * Users who are not logged in and try to access an area that requires
   login will be redirected to the page they were trying to access after
   they login.
+* Allows custom redirects for 404s.
 
+Since the error pages are not real nodes, they do not have a specific
+content type, and will not show up in node listings.
 
-Redirecting upon login
-----------------------
-Here is an example of how to add custom PHP to a 403 to give the user the
-option to login then redirect them to what they were after.
+At present, the module can be set up to handle 403 and 404
+errors. Drupal only allows those two errors to be assigned custom
+pages. However, the design of the module is flexible and can
+accommodate future error codes easily.
 
-<?php
-global $user;
-if ($user->uid == 0) {
-  print '<p>If your user account has access to this page, please <a href="/user?' .
-    drupal_get_destination() . '">log</a>.</p>';
-}
-?>
-
-That way when there's a 403 they get redirected back to the page they were trying to access.
-The above should be better refined to fit "best practices", such as doing this in a template.php
-rather than code stored in the database, and probably call l() or url() so it works when clean
-URL's are disabled.
-
-Thanks to: Andrew Berry (http://drupal.org/user/71291 deviantintegral).
-
-Database
---------
-This module does not require any new database tables to be installed.
 
 Installation:
 -------------
 
-1. Copy the customerror.module to the Drupal modules/ directory.
+1. Install the customerror module directory in the directory where you
+   keep contributed modules (e.g. sites/all/modules/).
 
-2. Go to Administer -> Build -> Modules
-   - Enable the customerror module, click on Save
+2. Go to the Modules page
+   - Enable the customerror module.
+   - If you want to messages to contain PHP, enable the core
+     PHP filter module.
+   Click on Save configuration.
 
-3. Configure the module:
+3. Configure Error reporting
+   - Go to Administer -> Site configuration -> Error reporting
+   - For 403 (access denied), enter the value:
+       customerror/403
+   - For 404 (not found), enter the value:
+       customerror/404
+   Click on Save configuration.
+
+4. Configure the module:
    - Go to Administer -> Site configuration -> Custom error
    - Enter any title and description you want for the 404 (not found)
      and 403 (access denied) pages.
    - You can use any HTML tags to format the text.
-   - Ensure the Enable checkbox is checked. That sets or unsets the Error
-     Reporting settings for you.
-
-4. Configure Error reporting
-   - Go to Administer -> Site configuration -> Error reporting
-   - For 403 (access denied), enter the value:
-       customerror/403
-   - For 40 (not found), enter the value:
-       customerror/404
+   Click on Save configuration.
 
 5. Test your error pages.
    - Copy your present admin page url.
@@ -95,19 +61,149 @@ Installation:
    - Paste the admin page url and try to go there.
    You should see your custom error page for 403 (access denied) page.
 
+
+Redirecting upon login
+----------------------
+
+Here is an example of how to add custom PHP to a 403 to give the user
+the option to login:
+
+<?php
+global $user;
+if ($user->uid == 0) {
+  $output = '<p>';
+  $output .= t('If your user account has access to this page, please !message.',
+    array(
+      '!message' => l(t('log in'), 'user'),
+    )
+  );
+  $output .= '</p>';
+  print $output;
+}
+?>
+
+Note that customerror keeps track of what page the user is trying to
+access, so after logging in, the user will be redirected to that page.
+
+
+Theme to be used on the error page
+----------------------------------
+
+If you've set an administration theme, the default is to use this on
+all pages where the path is "admin", including 403 and 404 error
+pages.  You can overide this by specifying a theme for custom error
+different from "System default".
+
+This setting has no effect if the administration theme is set to
+"<System default>".
+
+
+Custom redirects for 404 errors
+-------------------------------
+
+It is possible to set up custom redirects for status code 404 (not
+found).
+
+For example if you had a page called foo and a page called xyz, then
+you moved them to a page called bar, and abc respectively, you can
+setup a redirect pair of:
+
+  ^foo$ bar
+  ^xyz$ abc
+
+The first pair will transparently redirect users trying to access
+example.com/foo to example.com/bar.  The second pair will
+transparently redirect users trying to access example.com/xyz to
+example.com/abc.
+
+You can have multiple pairs of redirects. Each must be on a line by
+itself.
+
+Note that the first argument is a regexp, and the second argument is a
+path. You have to use one space between them, and enter each pattern
+on a line by itself. You cannot use variables.
+
+For more flexible URL rewriting, including variables, you may consider
+using an external URL rewrite engine, such as Apache mod_rewrite.
+
+
+FAQ
+---
+
+* I want to prevent robots from indexing my custom error pages by
+  setting the robots meta tag in the HTML head to NOINDEX.
+
+  - There is no need to. CustomError returns the correct HTTP status
+    codes (403 and 404). This will prevent robots from indexing the
+    error pages.
+	
+* I want to customize the custom error template output.
+
+  - In your site's theme, duplicate your page.tpl.php to be 
+    page-customerror.tpl.php and then make your modifications there.
+
+* I want to have a different template for my 404 and 403 pages.
+
+  - Duplicate your page.tpl.php page to be page-customerror-404.tpl.php 
+    and page-customerror-403.tpl.php. You do not need a 
+    page-customerror.tpl.php for this to work.
+
+* Some 403 errors (e.g. "http://example.org/includes") are served by
+  the Apache web server and not by CustomError. Isn't that a bug?
+
+  - No. CustomError is only designed to provide a custom error page
+    when the page is processed by Drupal.  The .htaccess file that
+    comes with Drupal will catch some attempts to access forbidden
+    directories before Drupal even see the requests.  These access
+    attempts will get the default Apache 403 error document, unless
+    you use the Apache ErrorDocument directive to override this, e.g:
+      ErrorDocument 403 /error/403.html
+    For more information about this, see:
+    http://httpd.apache.org/docs/current/custom-error.html
+
+* How can I get blocks to appear on the custom 403 and 404 pages?
+
+  - Blocks will not appear on the custom 403 and 404 pages produced by
+    this module.  If you want the blocks shown, either upgrade to the
+    Drupal 7 version, or use the "404 Blocks" module as a workaround.
+
+    URLs:
+      https://drupal.org/node/709298
+      https://drupal.org/project/blocks404
+
+
+Database
+--------
+
+This module does not require any new database tables to be installed.
+
+
 Bugs/Features/Patches
 ---------------------
-If you want to report bugs, feature requests, or submit a patch, please do so
-at the project page on the Drupal web site.
-http://drupal.org/project/customerror
+
+If you want to report a bug, request a feature, or submit a patch,
+please do so in the issue queue at the project page on the Drupal web
+site:
+
+   http://drupal.org/project/customerror
+
+
+Online documentation
+--------------------
+
+For more documentation, please see:
+
+   https://drupal.org/node/2064843
 
 Author
 ------
 
-Khalid Baheyeldin (http://baheyeldin.com/khalid and http://2bits.com)
+Principal author is Khalid Baheyeldin
+(http://baheyeldin.com/khalid and http://2bits.com).
 
-If you use this module, find it useful, and want to send the author
-a thank you note, then use the Feedback/Contact page at the URL above.
+Auxiliary maintainer is Gisle Hannemyr
+(https://drupal.org/user/409554).
 
-The author can also be contacted for paid customizations of this
-and other modules.
+The authors can be contacted for paid customizations of this module
+as well as Drupal consulting, installation, development, and
+customizations.
