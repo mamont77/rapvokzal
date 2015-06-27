@@ -1,11 +1,50 @@
+# Ignore paths that contain user-generated content.
+/sites/*/files
+/sites/*/private
+/files/*
 /cache
 /.idea
-/_server_settings
-/js
-/css
-/googleanalytics
-/languages
-/sites/default/settings.php
 /sub_domens
 
 /mamont/sxd/backup
+/sites/default/**/files
+/sites/default/**/private
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.bz2
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.tgz
+
+# Logs and databases #
+######################
+*.log
+*.sql
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+._*
+
+# Vim generated files #
+######################
+*.un~
+
+# SASS #
+##########
+.sass-cache
+/mamont
+/6d1f49c2cae6ab548d3991f3940527a7
+/18b1ddbdc8e1ad9a32b0987ec820148cb1e2dd71
+/sites/all/translations
+/_server_settings

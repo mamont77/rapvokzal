@@ -80,20 +80,6 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
-#Articles rules
-RewriteCond %{ENV:REDIRECT_STATUS} ^$
-RewriteRule ^s[0-9]{2,4}/[0-9]{1,2}/([0-9]+)_([a-z0-9\_\-]+)$ /6d1f49c2cae6ab548d3991f3940527a7.php [L]
-RewriteCond %{ENV:REDIRECT_STATUS} ^$
-RewriteRule ^s[0-9]{2,4}/[0-9]{1,2}/([0-9]+)$ /6d1f49c2cae6ab548d3991f3940527a7.php [L]
-RewriteCond %{ENV:REDIRECT_STATUS} ^$
-RewriteRule ^s[0-9]{2,4}/[0-9]{1,2}/[0-9]{1,2}/([0-9]+)$ /6d1f49c2cae6ab548d3991f3940527a7.php [L]
-
-#Linkfeed Articles
-RewriteRule ^l[0-9]{1,4}/[0-9]{1,2}/[0-9]{1,2}/([0-9]+)$ /18b1ddbdc8e1ad9a32b0987ec820148cb1e2dd71/18b1ddbdc8e1ad9a32b0987ec820148cb1e2dd71.php [L]
-RewriteRule ^l[0-9]{1,4}/[0-9]{1,2}/([0-9]+)_([a-z0-9\_\-]+)$ /18b1ddbdc8e1ad9a32b0987ec820148cb1e2dd71/18b1ddbdc8e1ad9a32b0987ec820148cb1e2dd71.php [L]
-RewriteRule ^l[0-9]{1,4}/[0-9]{1,2}/([0-9]+)$ /18b1ddbdc8e1ad9a32b0987ec820148cb1e2dd71/18b1ddbdc8e1ad9a32b0987ec820148cb1e2dd71.php [L]
-
-
   # If your site can be accessed both with and without the 'www.' prefix, you
   # can use one of the following settings to redirect users to your preferred
   # URL, either WITH or WITHOUT the 'www.' prefix. Choose ONLY one option:
@@ -107,8 +93,8 @@ RewriteRule ^l[0-9]{1,4}/[0-9]{1,2}/([0-9]+)$ /18b1ddbdc8e1ad9a32b0987ec820148cb
   # To redirect all users to access the site WITHOUT the 'www.' prefix,
   # (http://www.example.com/... will be redirected to http://example.com/...)
   # uncomment and adapt the following:
-  RewriteCond %{HTTP_HOST} ^www\.rapvokzal\.com$ [NC]
-  RewriteRule ^(.*)$ http://rapvokzal.com/$1 [L,R=301]
+  # RewriteCond %{HTTP_HOST} ^www\.example\.com$ [NC]
+  # RewriteRule ^(.*)$ http://example.com/$1 [L,R=301]
 
   # Modify the RewriteBase if you are using Drupal in a subdirectory or in a
   # VirtualDocumentRoot and the rewrite rules are not working properly.
@@ -119,53 +105,6 @@ RewriteRule ^l[0-9]{1,4}/[0-9]{1,2}/([0-9]+)$ /18b1ddbdc8e1ad9a32b0987ec820148cb
   # If your site is running in a VirtualDocumentRoot at http://example.com/,
   # uncomment the following line:
   # RewriteBase /
-
-  ### BOOST START ###
-
-  # Gzip Cookie Test
-  RewriteRule ^(.*)boost-gzip-cookie-test\.html cache/perm/boost-gzip-cookie-test\.html\.gz [L,T=text/html,E=no-gzip:1]
-
-  # GZIP - Cached css & js files
-  RewriteCond %{HTTP_COOKIE} !(boost-gzip)
-  RewriteCond %{HTTP:Accept-encoding} !gzip
-  RewriteRule .* - [S=2]
-  RewriteCond %{DOCUMENT_ROOT}/cache/perm/%{SERVER_NAME}%{REQUEST_URI}_\.css\.gz -s
-  RewriteRule .* cache/perm/%{SERVER_NAME}%{REQUEST_URI}_\.css\.gz [L,QSA,T=text/css,E=no-gzip:1]
-  RewriteCond %{DOCUMENT_ROOT}/cache/perm/%{SERVER_NAME}%{REQUEST_URI}_\.js\.gz -s
-  RewriteRule .* cache/perm/%{SERVER_NAME}%{REQUEST_URI}_\.js\.gz [L,QSA,T=text/javascript,E=no-gzip:1]
-
-  # NORMAL - Cached css & js files
-  RewriteCond %{DOCUMENT_ROOT}/cache/perm/%{SERVER_NAME}%{REQUEST_URI}_\.css -s
-  RewriteRule .* cache/perm/%{SERVER_NAME}%{REQUEST_URI}_\.css [L,QSA,T=text/css]
-  RewriteCond %{DOCUMENT_ROOT}/cache/perm/%{SERVER_NAME}%{REQUEST_URI}_\.js -s
-  RewriteRule .* cache/perm/%{SERVER_NAME}%{REQUEST_URI}_\.js [L,QSA,T=text/javascript]
-
-  # Caching for anonymous users
-  # Skip boost IF not get request OR uri has wrong dir OR cookie is set OR request came from this server OR https request
-  RewriteCond %{REQUEST_METHOD} !^(GET|HEAD)$ [OR]
-  RewriteCond %{REQUEST_URI} (^/(admin|cache|misc|modules|sites|system|openid|themes|node/add|comment/reply))|(/(edit|user|user/(login|password|register))$) [OR]
-  RewriteCond %{HTTP:Pragma} no-cache [OR]
-  RewriteCond %{HTTP:Cache-Control} no-cache [OR]
-  RewriteCond %{HTTPS} on [OR]
-  RewriteCond %{HTTP_COOKIE} DRUPAL_UID
-  RewriteRule .* - [S=5]
-
-  # GZIP
-  RewriteCond %{HTTP_COOKIE} !(boost-gzip)
-  RewriteCond %{HTTP:Accept-encoding} !gzip
-  RewriteRule .* - [S=2]
-  RewriteCond %{DOCUMENT_ROOT}/cache/normal/%{SERVER_NAME}%{REQUEST_URI}_%{QUERY_STRING}\.html\.gz -s
-  RewriteRule .* cache/normal/%{SERVER_NAME}%{REQUEST_URI}_%{QUERY_STRING}\.html\.gz [L,T=text/html,E=no-gzip:1]
-  RewriteCond %{DOCUMENT_ROOT}/cache/normal/%{SERVER_NAME}%{REQUEST_URI}_%{QUERY_STRING}\.xml\.gz -s
-  RewriteRule .* cache/normal/%{SERVER_NAME}%{REQUEST_URI}_%{QUERY_STRING}\.xml\.gz [L,T=text/xml,E=no-gzip:1]
-
-  # NORMAL
-  RewriteCond %{DOCUMENT_ROOT}/cache/normal/%{SERVER_NAME}%{REQUEST_URI}_%{QUERY_STRING}\.html -s
-  RewriteRule .* cache/normal/%{SERVER_NAME}%{REQUEST_URI}_%{QUERY_STRING}\.html [L,T=text/html]
-  RewriteCond %{DOCUMENT_ROOT}/cache/normal/%{SERVER_NAME}%{REQUEST_URI}_%{QUERY_STRING}\.xml -s
-  RewriteRule .* cache/normal/%{SERVER_NAME}%{REQUEST_URI}_%{QUERY_STRING}\.xml [L,T=text/xml]
-
-  ### BOOST END ###
 
   # Rewrite URLs of the form 'x' to the form 'index.php?q=x'.
   RewriteCond %{REQUEST_FILENAME} !-f
