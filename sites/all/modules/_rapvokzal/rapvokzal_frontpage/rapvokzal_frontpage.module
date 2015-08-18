@@ -71,13 +71,13 @@ node.sticky AS node_sticky,
 node.nid AS node_nid,
 caver.field_caver_data AS caver_data,
 files.filepath AS caver_filepath
- FROM node node 
+ FROM node node
  LEFT JOIN content_field_album_year node_data_field_album_year ON node.vid = node_data_field_album_year.vid
  LEFT JOIN content_field_album_style node_data_field_album_style ON node.vid = node_data_field_album_style.vid
  LEFT JOIN content_type_rap_albums node_data_field_album_kbt ON node.vid = node_data_field_album_kbt.vid
  LEFT JOIN node_counter node_counter ON node.nid = node_counter.nid
  LEFT JOIN content_field_caver AS caver ON node.nid = caver.nid
- LEFT JOIN files files ON caver.field_caver_fid = files.fid 
+ LEFT JOIN files files ON caver.field_caver_fid = files.fid
  INNER JOIN node_comment_statistics node_comment_statistics ON node.nid = node_comment_statistics.nid
  WHERE (node.status <> 0) AND (node.promote <> 0) AND (node.type in ('rap_albums')) AND caver.delta = '0'
    ORDER BY node_sticky DESC, node.created DESC
@@ -126,10 +126,10 @@ files.filepath AS caver_filepath
       node_data_field_news_img.field_news_img_data AS image_data,
       node_revisions.teaser AS teaser,
       files.filepath AS image_filepath
-    FROM node node 
+    FROM node node
     LEFT JOIN content_field_news_img node_data_field_news_img ON node.vid = node_data_field_news_img.vid
     LEFT JOIN node_revisions node_revisions ON node.vid = node_revisions.vid
-    LEFT JOIN files AS files ON node_data_field_news_img.field_news_img_fid = files.fid 
+    LEFT JOIN files AS files ON node_data_field_news_img.field_news_img_fid = files.fid
     WHERE (node.status <> 0) AND (node.promote <> 0) AND (node.type in ('story')) AND node_data_field_news_img.delta = '0'
     ORDER BY node.sticky DESC, node.created DESC
     LIMIT 0, %d
@@ -171,10 +171,10 @@ files.filepath AS caver_filepath
       node_data_field_news_img.field_news_img_data AS image_data,
       node_revisions.teaser AS teaser,
       files.filepath AS image_filepath
-    FROM node node 
+    FROM node node
     LEFT JOIN content_field_news_img node_data_field_news_img ON node.vid = node_data_field_news_img.vid
     LEFT JOIN node_revisions node_revisions ON node.vid = node_revisions.vid
-    LEFT JOIN files AS files ON node_data_field_news_img.field_news_img_fid = files.fid 
+    LEFT JOIN files AS files ON node_data_field_news_img.field_news_img_fid = files.fid
     WHERE (node.status <> 0) AND (node.promote <> 0) AND (node.type in ('reading')) AND node_data_field_news_img.delta = '0'
     ORDER BY node.sticky DESC, node.created DESC
     LIMIT 0, %d
@@ -222,7 +222,7 @@ files.filepath AS caver_filepath
       node_comment_statistics.comment_count AS comment_count,
       node_revisions.teaser AS teaser,
       files.filepath AS image_filepath
-    FROM node node 
+    FROM node node
     LEFT JOIN content_type_party node_data_field_party_time ON node.vid = node_data_field_party_time.vid
     LEFT JOIN node_counter node_counter ON node.nid = node_counter.nid
     INNER JOIN node_comment_statistics node_comment_statistics ON node.nid = node_comment_statistics.nid
@@ -285,7 +285,7 @@ files.filepath AS caver_filepath
       files.filepath AS image_filepath,
       node_counter.totalcount AS view_count,
       node_comment_statistics.comment_count AS comment_count
-    FROM node node 
+    FROM node node
     LEFT JOIN content_type_cinema node_data_field_cinema_img ON node.vid = node_data_field_cinema_img.vid
     LEFT JOIN node_counter node_counter ON node.nid = node_counter.nid
     INNER JOIN files AS files ON node_data_field_cinema_img.field_cinema_img_fid = files.fid
@@ -342,9 +342,9 @@ node_data_field_album_year.field_album_year_value AS node_data_field_album_year_
 content_field_video_clip_code.field_video_clip_code_data AS field_video_clip_code_data,
 content_field_video_clip_code.delta AS delta,
 node.created AS node_created
-  FROM node node 
+  FROM node node
   LEFT JOIN content_field_album_year node_data_field_album_year ON node.vid = node_data_field_album_year.vid
-  LEFT JOIN content_field_video_clip_code content_field_video_clip_code ON node.vid = content_field_video_clip_code.vid 
+  LEFT JOIN content_field_video_clip_code content_field_video_clip_code ON node.vid = content_field_video_clip_code.vid
   WHERE (node.type in ('video_clip')) AND (node.status <> 0) AND delta = 0
    ORDER BY node_sticky DESC, node_created DESC
    LIMIT 0, %d
@@ -378,4 +378,3 @@ node.created AS node_created
 
   return $welcome . $partys . $albums . $videos . '<div id="news_and_articles">' . $news . $articles . '</div>' . $cinema;
 }
-
