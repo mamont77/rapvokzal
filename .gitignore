@@ -3,10 +3,8 @@
 /sites/*/private
 /files/*
 /cache
-/.idea
-/sub_domens
 
-/mamont/sxd/backup
+# ** Only works in OSs that support newer versions of fnmatch (Bash 4+)
 /sites/default/**/files
 /sites/default/**/private
 
@@ -43,8 +41,3 @@ Thumbs.db
 # SASS #
 ##########
 .sass-cache
-/mamont
-/6d1f49c2cae6ab548d3991f3940527a7
-/18b1ddbdc8e1ad9a32b0987ec820148cb1e2dd71
-/sites/all/translations
-/_server_settings

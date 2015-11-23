@@ -378,3 +378,27 @@ node.created AS node_created
 
   return $welcome . $partys . $albums . $videos . '<div id="news_and_articles">' . $news . $articles . '</div>' . $cinema;
 }
+
+/**
+ * Via
+ *
+ * UPDATE files SET filepath=REPLACE(filepath,'files','sites/default/files');
+ * UPDATE content_field_video_clip_code SET field_video_clip_code_data=REPLACE
+ * (field_video_clip_code_data,'files/video_clip_thumbnails','sites/default/files/video_clip_thumbnails');
+ */
+//$queryResult = db_query('SELECT * FROM content_field_video_clip_code');
+//while ($item = db_fetch_object($queryResult)) {
+//  $data = $item->field_video_clip_code_data;
+//  $data = unserialize($data);
+//  $filepath = $data['emthumb']['filepath'];
+//  $filepath = str_replace('files/video_clip_thumbnails',
+//    'sites/default/files/video_clip_thumbnails',
+//    $filepath);
+//
+//  $data['emthumb']['filepath'] = $filepath;
+//  $data['emthumb']['destination'] = $filepath;
+//  $data = serialize($data);
+//
+////  db_query("UPDATE {content_field_video_clip_code} SET field_video_clip_code_data = '%s' WHERE vid = '%d' AND delta = '%d' AND nid = '%d'",
+////    $data, $item->vid, $item->delta, $item->nid);
+//}
