@@ -80,7 +80,7 @@ function varnish_perm() {
  */
 function varnish_requirements($phase) {
   if ($phase == 'runtime') {
-    $requirements = array('varnish');
+    $requirements = array('varnish' => array());
     $requirements['varnish']['title'] = t('Varnish status');
     // try a varnish admin connect, report results
     $status = _varnish_terminal_run(array('status'));
@@ -389,4 +389,17 @@ function _varnish_read_socket($client, $retry = 2) {
   );
 
   return $status;
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function varnish_preprocess_page(&$variables) {
+  global $conf;
+  // Set some special headers if the cache is disabled so that varnish will not
+  // cache the pages (for example when using captcha on them).
+  if (isset($conf['cache']) && empty($conf['cache'])) {
+    drupal_set_header('Pragma: no-cache');
+    drupal_set_header('Cache-Control: s-maxage=0, max-age=0, no-store, no-cache, must-revalidate');
+  }
 }
