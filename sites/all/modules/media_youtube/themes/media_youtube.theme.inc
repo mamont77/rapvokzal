@@ -35,7 +35,7 @@ function template_preprocess_media_youtube_html5(&$variables) {
   $variables = array_merge($variables, $variables['variables']);
 
   $video_id = $variables['video_id'];
-  $variables['url'] = isset($variables['url']) ? $variables['url'] : "http://www.youtube.com/v/$video_id";
+  $variables['url'] = isset($variables['url']) ? $variables['url'] : "//www.youtube.com/v/$video_id";
   $variables['url'] = check_plain($variables['url']);
   $variables['width'] = check_plain($variables['width']);
   $variables['height'] = check_plain($variables['height']);
@@ -51,7 +51,7 @@ function template_preprocess_media_youtube_default_external(&$variables) {
 
   $variables['flashvars'] = drupal_query_string_encode(array('playerMode' => 'embedded'));
   $video_id = $variables['video_id'];
-  $variables['url'] = isset($variables['url']) ? $variables['url'] : "http://www.youtube.com/v/$video_id";
+  $variables['url'] = isset($variables['url']) ? $variables['url'] : "//www.youtube.com/v/$video_id";
   $variables['url'] = check_plain($variables['url']);
   $variables['width'] = check_plain($variables['width']);
   $variables['height'] = check_plain($variables['height']);
@@ -164,12 +164,12 @@ function template_preprocess_media_youtube_flash(&$variables) {
     // Create a URL from our options.
     if ($variables['item']['data']['playlist']) {
       $video_id = substr($video_id, 9);
-      $url = check_plain("http://www.youtube.com/p/$video_id&$related$autoplay_value$colors$border$high_quality$display_info$enablejsapi$fs");
+      $url = check_plain("//www.youtube.com/p/$video_id&$related$autoplay_value$colors$border$high_quality$display_info$enablejsapi$fs");
       // FLV Player doesn't support playlists, so we need to fall back.
       $variables['use_flv'] = FALSE;
     }
     else {
-      $url = check_plain("http://www.youtube.com/v/$video_id&$related$autoplay_value$colors$border$high_quality$display_info$enablejsapi$fs");
+      $url = check_plain("//www.youtube.com/v/$video_id&$related$autoplay_value$colors$border$high_quality$display_info$enablejsapi$fs");
     }
 
     // Find the path to the JW FLV Media Player.

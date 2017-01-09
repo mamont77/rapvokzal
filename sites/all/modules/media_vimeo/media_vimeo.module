@@ -84,7 +84,7 @@ function media_vimeo_emfield_providers($module, $provider = NULL) {
  *  The direct URL to the video in question.
  */
 function media_vimeo_video_url($video_code) {
-  return url('http://www.vimeo.com/'. $video_code);
+  return url('//www.vimeo.com/'. $video_code);
 }
 
 /**
@@ -109,7 +109,7 @@ function media_vimeo_thumbnail_url($video_code) {
   }
 
   // Fallback to oembed.
-  $xml = emfield_request_xml('vimeo', 'http://vimeo.com/api/oembed.xml?url=http%3A//vimeo.com/'. $video_code, array(), TRUE, FALSE, $video_code);
+  $xml = emfield_request_xml('vimeo', '//vimeo.com/api/oembed.xml?url=http%3A//vimeo.com/'. $video_code, array(), TRUE, FALSE, $video_code);
   return url($xml['OEMBED']['THUMBNAIL_URL'][0]);
 }
 
@@ -123,7 +123,7 @@ function media_vimeo_thumbnail_url($video_code) {
  *  The metadata associated with the video.
  */
 function media_vimeo_data($video_code) {
-  $url = url('http://vimeo.com/api/v2/video/'. $video_code .'.php');
+  $url = url('//vimeo.com/api/v2/video/'. $video_code .'.php');
   $xml = emfield_request_xml('vimeo', $url, array(), TRUE, FALSE, $video_code, TRUE);
   return array_pop($xml);
 }

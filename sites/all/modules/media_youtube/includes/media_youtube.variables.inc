@@ -13,7 +13,7 @@ define('MEDIA_YOUTUBE_NAMESPACE', 'media_youtube__');
 /**
  * This is the main URL for YouTube.
  */
-define('MEDIA_YOUTUBE_MAIN_URL', 'http://youtube.com/');
+define('MEDIA_YOUTUBE_MAIN_URL', '//youtube.com/');
 
 /**
  * This is the URL to the API of YouTube.
