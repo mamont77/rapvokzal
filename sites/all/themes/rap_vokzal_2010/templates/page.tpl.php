@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" xml:lang="<?php print $language->language; ?>" lang="<?php print $language->language; ?>" dir="<?php print $language->dir; ?>">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "//www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="//www.w3.org/1999/xhtml" xmlns:fb="//www.facebook.com/2008/fbml" xml:lang="<?php print $language->language; ?>" lang="<?php print $language->language; ?>" dir="<?php print $language->dir; ?>">
 
 <head>
   <?php if (defined('_SAPE_TPL')): ?>
@@ -66,16 +66,16 @@
                 <input type="text" name="q" size="25" class="text" />
                 <input type="submit" value="&gt;" class="submit" />
               </form>
-              <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_partner-pub-9768859166525254%3Aem9uh9tqmhv&lang=ru"></script>
+              <script type="text/javascript" src="//www.google.com/coop/cse/brand?form=searchbox_partner-pub-9768859166525254%3Aem9uh9tqmhv&lang=ru"></script>
               <div id="results_partner-pub-9768859166525254:em9uh9tqmhv" style="display:none; margin: 0em auto 0 auto; width: 600px;">
                 <div class="cse-closeResults"><a>&times; <?php t('Close'); ?></a></div>
                 <div class="cse-resultsContainer"></div>
               </div>
               <style type="text/css">
-                @import url(http://www.google.com/cse/api/overlay.css);
+                @import url(//www.google.com/cse/api/overlay.css);
               </style>
-              <script src="http://www.google.com/uds/api?file=uds.js&v=1.0&key=ABQIAAAAAmuLWPLeOY9tw8kDrrmF_hSaJhGcWPn2TJZaW8rX2kwfTH-aMhQqKa55EaU_1yWVSVhKXiGqbwaifg&hl=ru" type="text/javascript"></script>
-              <script src="http://www.google.com/cse/api/overlay.js"></script>
+              <script src="//www.google.com/uds/api?file=uds.js&v=1.0&key=ABQIAAAAAmuLWPLeOY9tw8kDrrmF_hSaJhGcWPn2TJZaW8rX2kwfTH-aMhQqKa55EaU_1yWVSVhKXiGqbwaifg&hl=ru" type="text/javascript"></script>
+              <script src="//www.google.com/cse/api/overlay.js"></script>
               <script type="text/javascript">
                 function OnLoad() {
                 new CSEOverlay("partner-pub-9768859166525254:em9uh9tqmhv",
