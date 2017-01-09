@@ -61,30 +61,30 @@
             ));
           ?>
 
-          <div id="searchform">
-              <form id="searchbox_partner-pub-9768859166525254:em9uh9tqmhv" onsubmit="return false;">
-                <input type="text" name="q" size="25" class="text" />
-                <input type="submit" value="&gt;" class="submit" />
-              </form>
-              <script type="text/javascript" src="//www.google.com/coop/cse/brand?form=searchbox_partner-pub-9768859166525254%3Aem9uh9tqmhv&lang=ru"></script>
-              <div id="results_partner-pub-9768859166525254:em9uh9tqmhv" style="display:none; margin: 0em auto 0 auto; width: 600px;">
-                <div class="cse-closeResults"><a>&times; <?php t('Close'); ?></a></div>
-                <div class="cse-resultsContainer"></div>
-              </div>
-              <style type="text/css">
-                @import url(//www.google.com/cse/api/overlay.css);
-              </style>
-              <script src="//www.google.com/uds/api?file=uds.js&v=1.0&key=ABQIAAAAAmuLWPLeOY9tw8kDrrmF_hSaJhGcWPn2TJZaW8rX2kwfTH-aMhQqKa55EaU_1yWVSVhKXiGqbwaifg&hl=ru" type="text/javascript"></script>
-              <script src="//www.google.com/cse/api/overlay.js"></script>
-              <script type="text/javascript">
-                function OnLoad() {
-                new CSEOverlay("partner-pub-9768859166525254:em9uh9tqmhv",
-                   document.getElementById("searchbox_partner-pub-9768859166525254:em9uh9tqmhv"),
-                   document.getElementById("results_partner-pub-9768859166525254:em9uh9tqmhv"));
-                }
-                GSearch.setOnLoadCallback(OnLoad);
-              </script>
-          </div>
+<!--          <div id="searchform">-->
+<!--              <form id="searchbox_partner-pub-9768859166525254:em9uh9tqmhv" onsubmit="return false;">-->
+<!--                <input type="text" name="q" size="25" class="text" />-->
+<!--                <input type="submit" value="&gt;" class="submit" />-->
+<!--              </form>-->
+<!--              <script type="text/javascript" src="//www.google.com/coop/cse/brand?form=searchbox_partner-pub-9768859166525254%3Aem9uh9tqmhv&lang=ru"></script>-->
+<!--              <div id="results_partner-pub-9768859166525254:em9uh9tqmhv" style="display:none; margin: 0em auto 0 auto; width: 600px;">-->
+<!--                <div class="cse-closeResults"><a>&times; --><?php //t('Close'); ?><!--</a></div>-->
+<!--                <div class="cse-resultsContainer"></div>-->
+<!--              </div>-->
+<!--              <style type="text/css">-->
+<!--                @import url(//www.google.com/cse/api/overlay.css);-->
+<!--              </style>-->
+<!--              <script src="//www.google.com/uds/api?file=uds.js&v=1.0&key=ABQIAAAAAmuLWPLeOY9tw8kDrrmF_hSaJhGcWPn2TJZaW8rX2kwfTH-aMhQqKa55EaU_1yWVSVhKXiGqbwaifg&hl=ru" type="text/javascript"></script>-->
+<!--              <script src="//www.google.com/cse/api/overlay.js"></script>-->
+<!--              <script type="text/javascript">-->
+<!--                function OnLoad() {-->
+<!--                new CSEOverlay("partner-pub-9768859166525254:em9uh9tqmhv",-->
+<!--                   document.getElementById("searchbox_partner-pub-9768859166525254:em9uh9tqmhv"),-->
+<!--                   document.getElementById("results_partner-pub-9768859166525254:em9uh9tqmhv"));-->
+<!--                }-->
+<!--                GSearch.setOnLoadCallback(OnLoad);-->
+<!--              </script>-->
+<!--          </div>-->
 
         </div></div> <!-- /.section, /#navigation -->
       <?php endif; ?>
