@@ -1,0 +1,24 @@
+From a1b98c62c580744a500a4c897009c5441acf78b7 Mon Sep 17 00:00:00 2001
+From: Neil Drumm <drumm@delocalizedham.com>
+Date: Tue, 30 Jul 2013 19:43:59 -0700
+Subject: [PATCH] [#2046677] Fix strict warning
+
+---
+ modules/profile/profile.module |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/modules/profile/profile.module b/modules/profile/profile.module
+index d76d08a..39cf030 100644
+--- a/modules/profile/profile.module
++++ b/modules/profile/profile.module
+@@ -571,6 +571,7 @@ function template_preprocess_profile_listing(&$variables) {
+   // Supply filtered version of $fields that have values.
+   foreach ($variables['fields'] as $field) {
+     if ($field->value) {
++      $variables['profile'][$field->name] = new stdClass();
+       $variables['profile'][$field->name]->title = $field->title;
+       $variables['profile'][$field->name]->value = $field->value;
+       $variables['profile'][$field->name]->type = $field->type;
+-- 
+1.7.10.2 (Apple Git-33)
+
