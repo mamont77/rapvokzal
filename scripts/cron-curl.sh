@@ -1,3 +1,3 @@
 #!/bin/sh
 
-curl --silent --compressed http://rapvokzal.com/cron.php
+curl --silent --compressed https://rapvokzal.com/cron.php
