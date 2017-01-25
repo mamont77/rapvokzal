@@ -273,9 +273,9 @@ class PHPMailer {
    */
   public function IsHTML($bool) {
     if($bool == true) {
-      $this->ContentType = 'text/html';
+      $this->ContentType = $this->is_html = 'text/html';
     } else {
-      $this->ContentType = 'text/plain';
+      $this->ContentType = $this->is_html = 'text/plain';
     }
   }
 
@@ -991,7 +991,12 @@ class PHPMailer {
         $result .= $this->EncodeString($this->Body, $this->Encoding);
         break;
       case 'attachments':
-        $result .= $this->GetBoundary($this->boundary[1], '', '', '');
+        if ($this->is_html) {
+          $result .= $this->GetBoundary($this->boundary[1], '', $this->is_html, '');
+        }
+        else {
+          $result .= $this->GetBoundary($this->boundary[1], '', '', '');
+        }
         $result .= $this->EncodeString($this->Body, $this->Encoding);
         $result .= $this->LE;
         $result .= $this->AttachAll();
