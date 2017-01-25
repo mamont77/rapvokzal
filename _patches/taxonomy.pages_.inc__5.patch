@@ -1,0 +1,14 @@
+diff -r -u drupal-6.x-dev.orig/modules/taxonomy/taxonomy.pages.inc drupal-6.x-dev/modules/taxonomy/taxonomy.pages.inc
+--- drupal-6.x-dev.orig/modules/taxonomy/taxonomy.pages.inc	2014-08-06 19:10:01.000000000 +0200
++++ drupal-6.x-dev/modules/taxonomy/taxonomy.pages.inc	2014-08-15 15:12:28.000000000 +0200
+@@ -30,7 +30,9 @@
+       switch ($op) {
+         case 'page':
+           // Build breadcrumb based on first hierarchy of first term:
+-          $current->tid = $tids[0];
++          $current = (object) array(
++            'tid' => $tids[0],
++          );
+           $breadcrumb = array();
+           while ($parents = taxonomy_get_parents($current->tid)) {
+             $current = array_shift($parents);
