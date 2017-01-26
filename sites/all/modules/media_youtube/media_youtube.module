@@ -252,9 +252,9 @@ function media_youtube_media_mover($op = NULL, $action = NULL, $configuration = 
 function media_youtube_video_url($id) {
   if (strpos($id, 'PLAYLIST_') === 0) {
     // This is a youtube playlist.
-    return '//youtube.com/p/'. substr($id, 9);
+    return 'http://youtube.com/p/'. substr($id, 9);
   }
-  return url('//www.youtube.com/watch', array('query' => 'v='. $id));
+  return url('http://www.youtube.com/watch', array('query' => 'v='. $id));
 }
 
 /**
@@ -546,12 +546,12 @@ function media_youtube_emfield_data($video_id) {
   // Get info from a youtube playlist.
   if (strpos($video_id, 'PLAYLIST_') === 0) {
     $playlist_id = substr($video_id, 9);
-    $url = '//youtube.com/p/'. $playlist_id;
+    $url = 'http://youtube.com/p/'. $playlist_id;
     $data['playlist'] = 1;
 
     // Get the large thumbnail of the first video.
     // Use the Youtube Google API to get this data.
-    $api_url = '//gdata.youtube.com/feeds/api/playlists/' . $playlist_id;
+    $api_url = 'http://gdata.youtube.com/feeds/api/playlists/' . $playlist_id;
     $result = drupal_http_request($api_url);
     if ($result->code == 200) {
       $parser = drupal_xml_parser_create($result->data);
@@ -571,10 +571,10 @@ function media_youtube_emfield_data($video_id) {
   }
   // Get info from a single video.
   else {
-    $url = '//youtube.com/v/'. $video_id;
+    $url = 'http://youtube.com/v/'. $video_id;
     $data['playlist'] = 0;
     // Get the large thumbnail.
-    $data['thumbnail']['url'] = '//img.youtube.com/vi/'. $video_id .'/0.jpg';
+    $data['thumbnail']['url'] = 'http://img.youtube.com/vi/'. $video_id .'/0.jpg';
   }
 
   $response = emfield_request_header('youtube', $url);

@@ -181,7 +181,7 @@ function emvideo_youtube_thumbnail($field, $item, $formatter, $node, $width, $he
   }
 
   // Always return the larger image, since we're storing images locally.
-  $tn = "//img.youtube.com/vi/{$item['value']}/0.jpg";
+  $tn = "http://img.youtube.com/vi/{$item['value']}/0.jpg";
 
   return $tn;
 }

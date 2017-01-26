@@ -14,12 +14,12 @@ define('MEDIA_VIMEO_NAMESPACE', 'media_vimeo__');
 /**
  * This is the main URL for Vimeo.
  */
-define('MEDIA_VIMEO_MAIN_URL', '//vimeo.com/');
+define('MEDIA_VIMEO_MAIN_URL', 'http://vimeo.com/');
 
 /**
  * This is the URL to the API of Vimeo.
  */
-define('MEDIA_VIMEO_API_INFO', '//vimeo.com/api');
+define('MEDIA_VIMEO_API_INFO', 'http://vimeo.com/api');
 
 /**
  * This defines the version of the content data array that we serialize
