@@ -456,7 +456,7 @@ function advanced_forum_preprocess_node(&$variables) {
       $variables['signature'] = check_markup($variables['account']->signature, $variables['account']->signature_format);
     }
   }
-  
+
   // Initialize to avoid notices.
   $variables['classes'] = (empty($variables['classes'])) ? '' : $variables['classes'];
   $variables['node_classes'] = (empty($variables['node_classes'])) ? '' : $variables['node_classes'];
@@ -489,6 +489,7 @@ function advanced_forum_preprocess_comment(&$variables) {
     $account_id = $variables['comment']->uid;
     if ($account_id == 0) {
       // Anonymous user. Make a fake user object for theme_username
+      $variables['account'] = new stdClass();
       $variables['account']->name = $variables['comment']->name;
       $variables['account']->homepage = $variables['comment']->homepage;
       $variables['account']->mail = $variables['comment']->mail;
@@ -562,7 +563,7 @@ function advanced_forum_preprocess_comment(&$variables) {
         $variables['signature'] = check_markup($variables['account']->signature, $variables['account']->signature_format);
       }
     }
-    
+
     // Initialize to avoid notices.
     $variables['classes'] = (empty($variables['classes'])) ? '' : $variables['classes'];
     $variables['comment_classes'] = (empty($variables['comment_classes'])) ? '' : $variables['comment_classes'];
@@ -619,7 +620,7 @@ function advanced_forum_preprocess_forums($variables) {
   }
 
   $tid = $variables['tid'];
-  
+
   // Add in the mark as read link if user has access and we're not on a container.
   if (advanced_forum_markasread_access() && !in_array($tid, variable_get('forum_containers', array()))) {
     if ($tid) {
@@ -1015,7 +1016,7 @@ function advanced_forum_get_forums($tid = 0) {
           FROM ($sql_rewritten) AS forum_content_list
           GROUP BY tid";
     }
-    
+
     $_counts = db_query($sql);
     while ($count = db_fetch_object($_counts)) {
       $counts[$count->tid] = $count;
