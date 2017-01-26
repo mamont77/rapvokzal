@@ -35,7 +35,7 @@ function template_preprocess_media_youtube_html5(&$variables) {
   $variables = array_merge($variables, $variables['variables']);
 
   $video_id = $variables['video_id'];
-  $variables['url'] = isset($variables['url']) ? $variables['url'] : "http://www.youtube.com/v/$video_id";
+  $variables['url'] = isset($variables['url']) ? $variables['url'] : "//www.youtube.com/v/$video_id";
   $variables['url'] = check_plain($variables['url']);
   $variables['width'] = check_plain($variables['width']);
   $variables['height'] = check_plain($variables['height']);

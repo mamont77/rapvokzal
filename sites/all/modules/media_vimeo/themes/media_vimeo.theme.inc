@@ -56,7 +56,7 @@ function template_preprocess_media_vimeo_universal(&$variables) {
         $variables['query'][$key] = $variables[$key];
       }
     }
-    $variables['iframe_url'] = url('http://player.vimeo.com/video/' . $variables['video_code'], array('query' => $variables['query']));
+    $variables['iframe_url'] = url('//player.vimeo.com/video/' . $variables['video_code'], array('query' => $variables['query']));
   }
 }
 
