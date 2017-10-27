@@ -355,7 +355,7 @@ function smtp_drupal_mail_wrapper($message) {
 
 
   // Turn in debugging, if requested.
-  if (variable_get('smtp_debugging', 0) == 1) {
+  if (variable_get('smtp_debugging', 0) == 1 && user_access('administer smtp module')) {
     $mail->SMTPDebug = TRUE;
   }
 
@@ -788,20 +788,36 @@ function smtp_drupal_mail_wrapper($message) {
   $mail->Mailer = 'smtp';
 
 
-  // Let the people know what is going on.
-  watchdog('smtp', 'Sending mail to: @to', array('@to' => $to));
-
+  // Try to queue e-mail.
+  if (function_exists('job_queue_add')) {
+    watchdog('smtp', 'Queueing mail to: @to', array('@to' => $to));
+    job_queue_add('smtp_mail_send', t('Queued email'), array($mail), drupal_get_path('module', 'smtp') .'/phpmailer/class.phpmailer.php');
+  }
   // Try to send e-mail. If it fails, set watchdog entry.
-  if (!$mail->Send()) {
-    watchdog('smtp', 'Error sending e-mail from @from to @to : !error_message', array('@from' => $from, '@to' => $to, '!error_message' => $mail->ErrorInfo), WATCHDOG_ERROR);
-    return FALSE;
+  else {
+    watchdog('smtp', 'Sending mail to: @to', array('@to' => $to));
+    if (!$mail->Send()) {
+      watchdog('smtp', 'Error sending e-mail from @from to @to : !error_message', array('@from' => $from, '@to' => $to, '!error_message' => $mail->ErrorInfo), WATCHDOG_ERROR);
+      return FALSE;
+    }
+    $mail->SmtpClose();
   }
 
-  $mail->SmtpClose();
   return TRUE;
 }  //  End of smtp_drupal_mail_wrapper().
 
-
+/**
+ * Send an e-mail.
+ */
+function smtp_mail_send($mail) {
+  if (!$mail->Send()) {
+    watchdog('smtp', 'Error sending e-mail: !error_message', array('!error_message' => $mail->ErrorInfo), WATCHDOG_ERROR);
+  }
+  else {
+    watchdog('smtp', 'Sent queued mail');
+    $mail->SmtpClose();
+  }
+}
 
 /**
  * Implementation of hook_mail().
