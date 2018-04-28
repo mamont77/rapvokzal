@@ -1,3 +1,6 @@
 [submodule "sites/default/files"]
 	path = sites/default/files
 	url = git@github.com:mamont77/rvf.git
+[submodule "_patches/d6lts"]
+	path = _patches/d6lts
+	url = https://git.drupal.org/project/d6lts.git
