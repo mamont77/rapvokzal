@@ -1540,6 +1540,10 @@ function url($path = NULL, $options = array()) {
   }
   elseif (!empty($path) && !$options['alias']) {
     $path = drupal_get_path_alias($path, isset($options['language']) ? $options['language']->language : '');
+    // Strip leading slashes from internal paths to prevent them becoming external
+    // URLs without protocol. /example.com should not be turned into
+    // //example.com.
+    $path = ltrim($path, '/');
   }
 
   if (function_exists('custom_url_rewrite_outbound')) {
@@ -2239,6 +2243,8 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
       $javascript['header'] = array(
         'core' => array(
           'misc/jquery.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
+          'misc/jquery-extend-3.4.0.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
+          'misc/jquery-html-prefilter-3.5.0-backport.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
           'misc/drupal.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
         ),
         'module' => array(),
