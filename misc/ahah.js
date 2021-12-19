@@ -73,7 +73,7 @@ Drupal.ahah = function(base, element_settings) {
   // The 'this' variable will not persist inside of the options object.
   var ahah = this;
   var options = {
-    url: Drupal.sanitizeAjaxUrl(ahah.url),
+    url: ahah.url,
     data: ahah.button,
     beforeSubmit: function(form_values, element_settings, options) {
       return ahah.beforeSubmit(form_values, element_settings, options);
@@ -96,7 +96,6 @@ Drupal.ahah = function(base, element_settings) {
       }
     },
     dataType: 'json',
-    jsonp: false,
     type: 'POST'
   };
 

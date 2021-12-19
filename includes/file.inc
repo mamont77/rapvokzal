@@ -479,8 +479,8 @@ function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
  * exploit.php_.pps.
  *
  * Specifically, this function adds an underscore to all extensions that are
- * between 2 and 5 characters in length, internal to the file name, and either
- * included in the list of unsafe extensions, or not included in $extensions.
+ * between 2 and 5 characters in length, internal to the file name, and not
+ * included in $extensions.
  *
  * Function behavior is also controlled by the Drupal variable
  * 'allow_insecure_uploads'. If 'allow_insecure_uploads' evaluates to TRUE, no
@@ -489,8 +489,7 @@ function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
  * @param $filename
  *   File name to modify.
  * @param $extensions
- *   A space-separated list of extensions that should not be altered. Note that
- *   extensions that are unsafe will be altered regardless of this parameter.
+ *   A space-separated list of extensions that should not be altered.
  * @param $alerts
  *   If TRUE, drupal_set_message() will be called to display a message if the
  *   file name was changed.
@@ -507,10 +506,6 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
     $filename = str_replace(chr(0), '', $filename);
 
     $whitelist = array_unique(explode(' ', trim($extensions)));
-
-    // Remove unsafe extensions from the whitelist. The list is copied from
-    // file_save_upload().
-    $whitelist = array_diff($whitelist, explode('|', 'php|phar|pl|py|cgi|asp|js'));
 
     // Split the filename up by periods. The first part becomes the basename
     // the last part the final extension.
@@ -706,7 +701,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     }
 
     // Rename potentially executable files, to help prevent exploits.
-    if (preg_match('/\.(php|phar|pl|py|cgi|asp|js)$/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
+    if (preg_match('/\.(php|pl|py|cgi|asp|js)$/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
       $file->filemime = 'text/plain';
       $file->filepath .= '.txt';
       $file->filename .= '.txt';
