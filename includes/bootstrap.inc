@@ -2319,62 +2319,6 @@ function _drupal_bootstrap_sanitize_input(&$input, $whitelist = array()) {
 }
 
 /**
- * Sanitizes unsafe keys from the request.
- */
-function _drupal_bootstrap_sanitize_request() {
-  global $conf;
-  static $sanitized;
-
-  if (!$sanitized) {
-    // Ensure the whitelist array exists.
-    if (!isset($conf['sanitize_input_whitelist']) || !is_array($conf['sanitize_input_whitelist'])) {
-      $conf['sanitize_input_whitelist'] = array();
-    }
-
-    $sanitized_keys = _drupal_bootstrap_sanitize_input($_GET, $conf['sanitize_input_whitelist']);
-    $sanitized_keys = array_merge($sanitized_keys, _drupal_bootstrap_sanitize_input($_POST, $conf['sanitize_input_whitelist']));
-    $sanitized_keys = array_merge($sanitized_keys, _drupal_bootstrap_sanitize_input($_REQUEST, $conf['sanitize_input_whitelist']));
-    $sanitized_keys = array_merge($sanitized_keys, _drupal_bootstrap_sanitize_input($_COOKIE, $conf['sanitize_input_whitelist']));
-    $sanitized_keys = array_unique($sanitized_keys);
-
-    if (count($sanitized_keys) && !empty($conf['sanitize_input_logging'])) {
-      trigger_error(check_plain(sprintf('Potentially unsafe keys removed from request parameters: %s', implode(', ', $sanitized_keys)), E_USER_WARNING));
-    }
-
-    $sanitized = TRUE;
-  }
-}
-
-/**
- * Sanitizes unsafe keys from user input.
- *
- * @param mixed $input
- *   Input to sanitize.
- * @param array $whitelist
- *   Whitelist of values.
- * @return array
- */
-function _drupal_bootstrap_sanitize_input(&$input, $whitelist = array()) {
-  $sanitized_keys = array();
-
-  if (is_array($input)) {
-    foreach ($input as $key => $value) {
-      if ($key !== '' && $key[0] === '#' && !in_array($key, $whitelist, TRUE)) {
-        unset($input[$key]);
-        $sanitized_keys[] = $key;
-      }
-      elseif (is_array($input[$key])) {
-        $sanitized_keys = array_merge($sanitized_keys, _drupal_bootstrap_sanitize_input($input[$key], $whitelist));
-      }
-    }
-    // PHP 5.x will leave the array pointer at the end without this.
-    reset($input);
-  }
-
-  return $sanitized_keys;
-}
-
-/**
  * Removes the destination if it is dangerous.
  *
  * Note this can only be called after common.inc has been included.
